@@ -10,10 +10,7 @@ public class Character : PoolableMono
     public void Picked()
     {
         Debug.Log($"{gameObject.name}이 선택되었습니다.");
-        PoolManager.Instance.Pop("AreaBox", transform.position+new Vector3(1, 0));
-        PoolManager.Instance.Pop("AreaBox", transform.position+new Vector3(-1, 0));
-        PoolManager.Instance.Pop("AreaBox", transform.position+new Vector3(0, 1));
-        PoolManager.Instance.Pop("AreaBox", transform.position+new Vector3(0, -1));
+        PoolManager.Instance.Pop("AreaBox", transform.position);
         PickEvent?.Invoke();
     }
 
