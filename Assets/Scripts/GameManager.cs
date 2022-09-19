@@ -7,5 +7,5 @@ public class GameManager : MonoSingleton<GameManager>
     [SerializeField]
     private GameData gameData = null;
 
-    public GameData CurrentGameData { get { return gameData; } }
+    public GameData CurrentGameData { get { return gameData; } set { gameData = value; } }
 }

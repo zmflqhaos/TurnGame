@@ -21,7 +21,6 @@ public class StatRadarChart : MonoBehaviour
     public void SetStats()
     {
         UpdateStatsVisual();
-
     }
 
     private void UpdateStatsVisual()
@@ -31,18 +30,17 @@ public class StatRadarChart : MonoBehaviour
         float radarChartSize = 385f;
         float angleInc = 360 / 6f;
 
-        Vector3 hpVertex = Quaternion.Euler(0, 0, -angleInc * 0) * Vector3.up * radarChartSize * gameData._playersData[0]._playerStat.GetStatAmountNormalized(Stat.Type.VIT);
+        Vector3 hpVertex = Quaternion.Euler(0, 0, -angleInc * 0) * Vector3.up * radarChartSize * gameData._playersData[0]._playerStat._vitStat / Stat.STAT_MAX;
 
-        Vector3 mpVertex = Quaternion.Euler(0, 0, -angleInc * 1) * Vector3.up * radarChartSize * gameData._playersData[0]._playerStat.GetStatAmountNormalized(Stat.Type.MGI);
+        Vector3 mpVertex = Quaternion.Euler(0, 0, -angleInc * 1) * Vector3.up * radarChartSize * gameData._playersData[0]._playerStat._mtlStat / Stat.STAT_MAX;
 
-        Vector3 strVertex = Quaternion.Euler(0, 0, -angleInc * 2) * Vector3.up * radarChartSize * gameData._playersData[0]._playerStat.GetStatAmountNormalized(Stat.Type.STR);
+        Vector3 strVertex = Quaternion.Euler(0, 0, -angleInc * 2) * Vector3.up * radarChartSize * gameData._playersData[0]._playerStat._strStat / Stat.STAT_MAX;
 
-        Vector3 dexVertex = Quaternion.Euler(0, 0, -angleInc * 3) * Vector3.up * radarChartSize * gameData._playersData[0]._playerStat.GetStatAmountNormalized(Stat.Type.DEX);
+        Vector3 dexVertex = Quaternion.Euler(0, 0, -angleInc * 3) * Vector3.up * radarChartSize * gameData._playersData[0]._playerStat._dexStat / Stat.STAT_MAX;
 
-        Vector3 inteVertex = Quaternion.Euler(0, 0, -angleInc * 4) * Vector3.up * radarChartSize * gameData._playersData[0]._playerStat.GetStatAmountNormalized(Stat.Type.INT);
+        Vector3 inteVertex = Quaternion.Euler(0, 0, -angleInc * 4) * Vector3.up * radarChartSize * gameData._playersData[0]._playerStat._intStat / Stat.STAT_MAX;
 
-        Vector3 chaVertex = Quaternion.Euler(0, 0, -angleInc * 5) * Vector3.up * radarChartSize * gameData._playersData[0]._playerStat.GetStatAmountNormalized(Stat.Type.CHA);
-
+        Vector3 chaVertex = Quaternion.Euler(0, 0, -angleInc * 5) * Vector3.up * radarChartSize * gameData._playersData[0]._playerStat._chaStat / Stat.STAT_MAX;
 
         Vector3[] vertices = new Vector3[7];
         Vector2[] uv = new Vector2[7];

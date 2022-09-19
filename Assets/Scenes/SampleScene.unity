@@ -383,7 +383,7 @@ GameObject:
   - component: {fileID: 442794858}
   - component: {fileID: 442794857}
   m_Layer: 5
-  m_Name: HPtext
+  m_Name: VITtext
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -429,7 +429,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: HP
+  m_text: VIT
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1462,7 +1462,7 @@ GameObject:
   - component: {fileID: 1115525015}
   - component: {fileID: 1115525014}
   m_Layer: 5
-  m_Name: MPtext
+  m_Name: MTLtext
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1508,7 +1508,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MP
+  m_text: MTL
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2036,8 +2036,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameData:
     _playersData:
-    - _name: 
-      _privateInv: []
+    - _name: Player1
+      _playerStat:
+        _vitStat: 5
+        _mtlStat: 5
+        _strStat: 5
+        _dexStat: 5
+        _intStat: 5
+        _chaStat: 5
+      _privateInv:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
     _publicInv: []
 --- !u!1 &1315059997
 GameObject:
