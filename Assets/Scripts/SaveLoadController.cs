@@ -45,13 +45,13 @@ public class SaveLoadController : MonoBehaviour
 {
     private void Awake()
     {
-		SaveSystem.Load("Player1Save");
+		SaveSystem.Load("GameDataSave");
 	}
     void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.S))
 		{
-			SaveSystem.Save("Player1Save");
+			SaveSystem.Save("GameDataSave");
 		}
 	}
 }
