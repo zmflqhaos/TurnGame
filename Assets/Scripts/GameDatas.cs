@@ -57,3 +57,18 @@ public enum Category
     QUEST,
     ETC
 }
+
+public enum AttackCate
+{
+    Physical,
+    Magic,
+    True,
+}
+
+public enum LookRotation
+{
+    W,
+    A,
+    S,
+    D
+}
