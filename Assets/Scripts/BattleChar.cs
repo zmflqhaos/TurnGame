@@ -20,6 +20,12 @@ public class BattleChar : MonoBehaviour
     [SerializeField]
     private Tilemap[] mapList;
     private int mapNumber;
+    private float mapScale;
+
+    [SerializeField]
+    private IntVec2[] mapSizes;
+    private IntVec2 mapSize;
+    private List<List<bool>> currentMapSize;
 
     private GameObject[] moveAreas = new GameObject[4];
     [SerializeField]
@@ -44,7 +50,8 @@ public class BattleChar : MonoBehaviour
 
     private bool isPlayerTeam = true;
     private bool moveMode = false;
-    private bool attackMode = false;
+    private bool attackUIMode = false;
+    private bool attackRangeMode = false;
     private int actionPoint;
 
     void Start()
@@ -55,12 +62,22 @@ public class BattleChar : MonoBehaviour
         {
             if(mapList[i].gameObject.activeSelf)
             {
-                gameObject.transform.localScale = mapList[i].transform.localScale;
-                gameObject.transform.position = mapList[i].GetCellCenterWorld(playerPos);
+                mapScale = mapList[i].transform.localScale.x;
                 mapNumber = i;
+                mapSize = mapSizes[i];
                 break;
             }
         }
+        for(int i=0; i<mapSize.x; i++)
+        {
+            currentMapSize.Add(new List<bool>());
+            for(int j=0; j<mapSize.y; j++)
+            {
+                currentMapSize[i].Add(false);
+            }
+        }
+        gameObject.transform.localScale.Set(mapScale, mapScale, 1);
+        //gameObject.transform.position = new Vector3Int(mapSize[mapNumber].x, mapSize[mapNumber].y);
         for(int i=0; i<4; i++)
         {
             moveAreas[i] = Instantiate(moveArea, gameObject.transform);
@@ -72,24 +89,30 @@ public class BattleChar : MonoBehaviour
             attackAreas[i] = Instantiate(attackArea, gameObject.transform);
             attackAreas[i].name = "AttackArea";
         }
-        ActiveMoveArea();
-        ChangeAttackArea(-1);
     }
 
     void Update()
     {
         AreaClickMove();
         AttackPosChange();
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            if(attackUIMode)
+                ToggleAttackUI();
+            if (attackRangeMode)
+                ToggleAttackArea();
+        }
+            
     }
 
     #region 무브
-    private void ActiveMoveArea()
+    private void ToggleMoveArea()
     {
         moveArea.SetActive(moveMode);
         if (moveMode)
         {
             for (int i = 0; i < 4; i++)
-                moveAreas[i].SetActive(mapList[mapNumber].GetTile(playerPos + a[i]));
+                moveAreas[i].SetActive(CheckUnder(playerPos + a[i]));
         }
         else
         {
@@ -106,26 +129,23 @@ public class BattleChar : MonoBehaviour
         mousePosInt = mapList[mapNumber].WorldToCell(mousePos);
         for (int i = 0; i < 4; i++)
         {
-            if (mousePosInt == playerPos + a[i])
+            if (mousePosInt == playerPos + a[i]&& CheckUnder(playerPos + a[i]))
             {
-                if (mapList[mapNumber].GetTile(playerPos + a[i]))
-                {
-                    playerPos += a[i];
-                    actionPoint--;
-                    moveMode = false;
-                }
+                playerPos += a[i];
+                actionPoint--;
+                moveMode = false;
                 break;
             }
         }
-        ActiveMoveArea();
+        ToggleMoveArea();
         gameObject.transform.position = mapList[mapNumber].GetCellCenterWorld(playerPos);
     }
     #endregion
 
-    #region 어택
+    #region 어택 UI
     private void AttackPosChange()
     {
-        if (attackMode)
+        if (!attackUIMode&&attackRangeMode)
         {
             if (Input.GetKeyDown(KeyCode.W))
             {
@@ -147,28 +167,15 @@ public class BattleChar : MonoBehaviour
                 attackPos = LookRotation.D;
                 ChangeAttackArea(attackNum);
             }
+            
         }
     }
 
     public void ChangeAttackArea(int num)
     {
-        attackArea.SetActive(attackMode);
-
-        for (int i = 0; i < 10; i++)
-            attackAreas[i].SetActive(false);
-
-        if (num == -1) return;
-
-        if (attackMode)
-        {
-            attackNum = num;
-            AttackAreaRotation();
-        }
-        else
-        {
-            for (int i = 0; i < 10; i++)
-                attackAreas[i].SetActive(false);
-        }
+        attackNum = num;
+        ClearAttackArea();
+        AttackAreaRotation();
     }
 
     private void AttackAreaRotation()
@@ -180,37 +187,51 @@ public class BattleChar : MonoBehaviour
                 for (int i = 0; i < testData[attackNum].attackRange.Count; i++)
                 {
                     vec.Set(-testData[attackNum].attackRange[i].y, testData[attackNum].attackRange[i].x, 0);
-                    attackAreas[i].transform.position = mapList[mapNumber].GetCellCenterWorld(vec);
-                    attackAreas[i].SetActive(true);
+                    attackAreas[i].transform.position = mapList[mapNumber].GetCellCenterWorld(vec + playerPos);
+                    attackAreas[i].SetActive(CheckUnder(vec + playerPos));
                 }
                 break;
             case LookRotation.A:
                 for (int i = 0; i < testData[attackNum].attackRange.Count; i++)
                 {
                     vec.Set(-testData[attackNum].attackRange[i].x, -testData[attackNum].attackRange[i].y, 0);
-                    attackAreas[i].transform.position = mapList[mapNumber].GetCellCenterWorld(vec);
-                    attackAreas[i].SetActive(true);
+                    attackAreas[i].transform.position = mapList[mapNumber].GetCellCenterWorld(vec + playerPos);
+                    attackAreas[i].SetActive(CheckUnder(vec + playerPos));
                 }
                 break;
             case LookRotation.S:
                 for (int i = 0; i < testData[attackNum].attackRange.Count; i++)
                 {
                     vec.Set(testData[attackNum].attackRange[i].y, -testData[attackNum].attackRange[i].x, 0);
-                    attackAreas[i].transform.position = mapList[mapNumber].GetCellCenterWorld(vec);
-                    attackAreas[i].SetActive(true);
+                    attackAreas[i].transform.position = mapList[mapNumber].GetCellCenterWorld(vec + playerPos);
+                    attackAreas[i].SetActive(CheckUnder(vec + playerPos));
                 }
                 break;
             case LookRotation.D:
                 for (int i = 0; i < testData[attackNum].attackRange.Count; i++)
                 {
                     vec.Set(testData[attackNum].attackRange[i].x, testData[attackNum].attackRange[i].y, 0);
-                    attackAreas[i].transform.position = mapList[mapNumber].GetCellCenterWorld(vec);
-                    attackAreas[i].SetActive(true);
+                    attackAreas[i].transform.position = mapList[mapNumber].GetCellCenterWorld(vec + playerPos);
+                    attackAreas[i].SetActive(CheckUnder(vec + playerPos));
                 }
                 break;
         }
+        attackArea.SetActive(true);
+    }
+
+    private void ClearAttackArea()
+    {
+        attackArea.SetActive(false);
+        for (int i = 0; i < 10; i++)
+        {
+            attackAreas[i].SetActive(false);
+        }
     }
     #endregion
+    public bool CheckUnder(Vector3Int pos)
+    {
+        return mapList[mapNumber].GetTile(pos);
+    }
 
     public void MyTurn()
     {
@@ -221,14 +242,25 @@ public class BattleChar : MonoBehaviour
     {
         if (actionPoint <= 0) return;
         moveMode = !moveMode;
-        ActiveMoveArea();
+        ToggleMoveArea();
     }
 
-    public void ShowAttackUI()
+    public void ToggleAttackUI()
     {
         if (actionPoint <= 0) return;
-        attackMode = !attackMode;
-        attackPanel.SetActive(attackMode);
-        turnPanel.SetActive(!attackMode);
+        attackUIMode = !attackUIMode;
+        moveMode = false;
+        attackRangeMode = false;
+        attackPanel.SetActive(attackUIMode);
+        turnPanel.SetActive(!attackUIMode);
+        ToggleMoveArea();
+        ClearAttackArea();
+    }
+
+    public void ToggleAttackArea()
+    {
+        attackUIMode = !attackUIMode;
+        attackRangeMode = !attackRangeMode;
+        attackPanel.SetActive(attackUIMode);
     }
 }

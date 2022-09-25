@@ -1203,6 +1203,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 926044964}
+        m_TargetAssemblyTypeName: BattleChar, Assembly-CSharp
+        m_MethodName: ToggleAttackArea
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &587371410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1329,6 +1341,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: BattleChar, Assembly-CSharp
         m_MethodName: ChangeAttackArea
         m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 926044964}
+        m_TargetAssemblyTypeName: BattleChar, Assembly-CSharp
+        m_MethodName: ToggleAttackArea
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1808,8 +1832,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -629.99994, y: -312.50006}
-  m_SizeDelta: {x: -1260, y: -624.9999}
+  m_AnchoredPosition: {x: -626.99994, y: -312.50006}
+  m_SizeDelta: {x: -1266, y: -624.9999}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &903694918
 MonoBehaviour:
@@ -1945,6 +1969,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 926044964}
+        m_TargetAssemblyTypeName: BattleChar, Assembly-CSharp
+        m_MethodName: ToggleAttackArea
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &921569604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2021,6 +2057,13 @@ MonoBehaviour:
   - {fileID: 1595946001}
   - {fileID: 2118257794}
   - {fileID: 1187294464}
+  mapSizes:
+  - x: 6
+    y: 4
+  - x: 8
+    y: 6
+  - x: 10
+    y: 8
   moveArea: {fileID: 1808657047}
   attackArea: {fileID: 1897683773}
   turnPanel: {fileID: 903694916}
@@ -2132,8 +2175,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -633.99994, y: -317}
-  m_SizeDelta: {x: -1260, y: -624.9999}
+  m_AnchoredPosition: {x: -626.99994, y: -312.5}
+  m_SizeDelta: {x: -1266, y: -625}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1064683097
 MonoBehaviour:
@@ -3890,7 +3933,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 926044964}
         m_TargetAssemblyTypeName: BattleChar, Assembly-CSharp
-        m_MethodName: ShowAttackUI
+        m_MethodName: ToggleAttackUI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4852,7 +4895,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1808657048
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5071,7 +5114,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1897683774
 Transform:
   m_ObjectHideFlags: 0

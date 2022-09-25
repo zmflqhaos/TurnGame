@@ -48,6 +48,13 @@ public class Stat
     public int _chaStat;
 }
 
+[System.Serializable]
+public class IntVec2
+{
+    public int x;
+    public int y;
+}
+
 //아이템의 종류를 구분하는 이넘
 public enum Category
 {
