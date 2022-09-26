@@ -25,7 +25,9 @@ public class BattleChar : MonoBehaviour
     [SerializeField]
     private IntVec2[] mapSizes;
     private IntVec2 mapSize;
-    private List<List<bool>> currentMapSize;
+    private List<List<Vector3Int>> mapBox = new List<List<Vector3Int>>();
+    private int myX;
+    private int myY;
 
     private GameObject[] moveAreas = new GameObject[4];
     [SerializeField]
@@ -45,8 +47,6 @@ public class BattleChar : MonoBehaviour
 
     private Vector3 mousePos;
     private Vector3Int mousePosInt;
-
-    private Vector3Int playerPos = new Vector3Int(0, 0, 0);
 
     private bool isPlayerTeam = true;
     private bool moveMode = false;
@@ -68,21 +68,20 @@ public class BattleChar : MonoBehaviour
                 break;
             }
         }
-        for(int i=0; i<mapSize.x; i++)
+        for(int i=0; i<mapSize.y; i++)
         {
-            currentMapSize.Add(new List<bool>());
-            for(int j=0; j<mapSize.y; j++)
+            mapBox.Add(new List<Vector3Int>());
+            for(int j=0; j<mapSize.x; j++)
             {
-                currentMapSize[i].Add(false);
+                mapBox[i].Add(new Vector3Int(j, i));
             }
         }
-        gameObject.transform.localScale.Set(mapScale, mapScale, 1);
-        //gameObject.transform.position = new Vector3Int(mapSize[mapNumber].x, mapSize[mapNumber].y);
+        myX = myY = 0;
         for(int i=0; i<4; i++)
         {
             moveAreas[i] = Instantiate(moveArea, gameObject.transform);
             moveAreas[i].name = "MoveArea";
-            moveAreas[i].transform.position = mapList[mapNumber].GetCellCenterWorld(playerPos + a[i]);
+            moveAreas[i].transform.position = mapBox[myY][myX] + a[i];
         }
         for (int i = 0; i < 10; i++)
         {
@@ -109,36 +108,28 @@ public class BattleChar : MonoBehaviour
     private void ToggleMoveArea()
     {
         moveArea.SetActive(moveMode);
-        if (moveMode)
-        {
-            for (int i = 0; i < 4; i++)
-                moveAreas[i].SetActive(CheckUnder(playerPos + a[i]));
-        }
-        else
-        {
-            for (int i = 0; i < 4; i++)
-                moveAreas[i].SetActive(false);
-        }
+        for (int i = 0; i < 4; i++)
+            moveAreas[i].SetActive(moveMode);
     }
 
     private void AreaClickMove()
     {
         if (!Input.GetMouseButtonDown(0) || !moveMode) return;
 
-        mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
-        mousePosInt = mapList[mapNumber].WorldToCell(mousePos);
+        mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition)+new Vector3(0, 0, 10);
+        mousePosInt = Vector3Int.RoundToInt(mousePos);
+        Debug.Log(mousePosInt);
         for (int i = 0; i < 4; i++)
-        {
-            if (mousePosInt == playerPos + a[i]&& CheckUnder(playerPos + a[i]))
+        {   //-1 0 0                0 0 0       -1
+            if (mousePosInt == mapBox[myY][myX]+a[i]) //i=1
             {
-                playerPos += a[i];
+                gameObject.transform.position = mapBox[myY][myX];
                 actionPoint--;
                 moveMode = false;
                 break;
             }
         }
         ToggleMoveArea();
-        gameObject.transform.position = mapList[mapNumber].GetCellCenterWorld(playerPos);
     }
     #endregion
 
@@ -187,32 +178,32 @@ public class BattleChar : MonoBehaviour
                 for (int i = 0; i < testData[attackNum].attackRange.Count; i++)
                 {
                     vec.Set(-testData[attackNum].attackRange[i].y, testData[attackNum].attackRange[i].x, 0);
-                    attackAreas[i].transform.position = mapList[mapNumber].GetCellCenterWorld(vec + playerPos);
-                    attackAreas[i].SetActive(CheckUnder(vec + playerPos));
+                    attackAreas[i].transform.position = mapBox[myY][myX] + vec;
+                    attackAreas[i].SetActive(true);
                 }
                 break;
             case LookRotation.A:
                 for (int i = 0; i < testData[attackNum].attackRange.Count; i++)
                 {
                     vec.Set(-testData[attackNum].attackRange[i].x, -testData[attackNum].attackRange[i].y, 0);
-                    attackAreas[i].transform.position = mapList[mapNumber].GetCellCenterWorld(vec + playerPos);
-                    attackAreas[i].SetActive(CheckUnder(vec + playerPos));
+                    attackAreas[i].transform.position = mapBox[myY][myX] + vec;
+                    attackAreas[i].SetActive(true);
                 }
                 break;
             case LookRotation.S:
                 for (int i = 0; i < testData[attackNum].attackRange.Count; i++)
                 {
                     vec.Set(testData[attackNum].attackRange[i].y, -testData[attackNum].attackRange[i].x, 0);
-                    attackAreas[i].transform.position = mapList[mapNumber].GetCellCenterWorld(vec + playerPos);
-                    attackAreas[i].SetActive(CheckUnder(vec + playerPos));
+                    attackAreas[i].transform.position = mapBox[myY][myX] + vec;
+                    attackAreas[i].SetActive(true);
                 }
                 break;
             case LookRotation.D:
                 for (int i = 0; i < testData[attackNum].attackRange.Count; i++)
                 {
                     vec.Set(testData[attackNum].attackRange[i].x, testData[attackNum].attackRange[i].y, 0);
-                    attackAreas[i].transform.position = mapList[mapNumber].GetCellCenterWorld(vec + playerPos);
-                    attackAreas[i].SetActive(CheckUnder(vec + playerPos));
+                    attackAreas[i].transform.position = mapBox[myY][myX] + vec;
+                    attackAreas[i].SetActive(true);
                 }
                 break;
         }
@@ -228,10 +219,6 @@ public class BattleChar : MonoBehaviour
         }
     }
     #endregion
-    public bool CheckUnder(Vector3Int pos)
-    {
-        return mapList[mapNumber].GetTile(pos);
-    }
 
     public void MyTurn()
     {
