@@ -4,7 +4,6 @@ using System;
 using UnityEngine;
 using System.Reflection;
 
-
 //게임 전체를 관리하는 데이터
 [System.Serializable]
 public class GameData

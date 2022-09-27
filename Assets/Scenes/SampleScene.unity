@@ -1193,24 +1193,24 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 926044964}
         m_TargetAssemblyTypeName: BattleChar, Assembly-CSharp
-        m_MethodName: ChangeAttackArea
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 926044964}
-        m_TargetAssemblyTypeName: BattleChar, Assembly-CSharp
         m_MethodName: ToggleAttackArea
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 926044964}
+        m_TargetAssemblyTypeName: BattleChar, Assembly-CSharp
+        m_MethodName: ChangeAttackArea
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -1339,8 +1339,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 926044964}
         m_TargetAssemblyTypeName: BattleChar, Assembly-CSharp
-        m_MethodName: ChangeAttackArea
-        m_Mode: 3
+        m_MethodName: ToggleAttackArea
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1351,8 +1351,8 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 926044964}
         m_TargetAssemblyTypeName: BattleChar, Assembly-CSharp
-        m_MethodName: ToggleAttackArea
-        m_Mode: 1
+        m_MethodName: ChangeAttackArea
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1959,24 +1959,24 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 926044964}
         m_TargetAssemblyTypeName: BattleChar, Assembly-CSharp
-        m_MethodName: ChangeAttackArea
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 926044964}
-        m_TargetAssemblyTypeName: BattleChar, Assembly-CSharp
         m_MethodName: ToggleAttackArea
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 926044964}
+        m_TargetAssemblyTypeName: BattleChar, Assembly-CSharp
+        m_MethodName: ChangeAttackArea
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -2053,17 +2053,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b4e390e1e95aa4a48a26a18fa1ae1361, type: 2}
   - {fileID: 11400000, guid: 8cfe07735165bb946900bd28db089122, type: 2}
   - {fileID: 11400000, guid: 892766551dfaee749acb6377d674ed44, type: 2}
-  mapList:
-  - {fileID: 1595946001}
-  - {fileID: 2118257794}
-  - {fileID: 1187294464}
-  mapSizes:
-  - x: 6
-    y: 4
-  - x: 8
-    y: 6
-  - x: 10
-    y: 8
   moveArea: {fileID: 1808657047}
   attackArea: {fileID: 1897683773}
   turnPanel: {fileID: 903694916}
@@ -3310,6 +3299,7 @@ GameObject:
   - component: {fileID: 1309859752}
   - component: {fileID: 1309859751}
   - component: {fileID: 1309859753}
+  - component: {fileID: 1309859754}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3383,6 +3373,40 @@ MonoBehaviour:
       - {fileID: 0}
       - {fileID: 0}
     _publicInv: []
+--- !u!114 &1309859754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1309859750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4761083ce7ab0644abbca76013bbd593, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCam: {fileID: 0}
+  vecOne:
+  - {x: 0, y: 1, z: 0}
+  - {x: -1, y: 0, z: 0}
+  - {x: 0, y: -1, z: 0}
+  - {x: 1, y: 0, z: 0}
+  mapList:
+  - {fileID: 1595946001}
+  - {fileID: 2118257794}
+  - {fileID: 1187294464}
+  mapNumber: 0
+  mapScale: 0
+  mapSizes:
+  - x: 6
+    y: 4
+  - x: 8
+    y: 6
+  - x: 10
+    y: 8
+  mapSize:
+    x: 0
+    y: 0
 --- !u!1 &1329774519
 GameObject:
   m_ObjectHideFlags: 0
