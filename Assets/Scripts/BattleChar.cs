@@ -14,8 +14,9 @@ public class BattleChar : MonoBehaviour
     [SerializeField]
     private AttackData[] testData; //나중에 바꿔야해 제발
 
-    private int myX;
-    private int myY;
+    private BattleChar myBC;
+    public int myX;
+    public int myY;
 
     private GameObject[] moveAreas = new GameObject[4];
     [SerializeField]
@@ -40,18 +41,22 @@ public class BattleChar : MonoBehaviour
     private bool moveMode = false;
     private bool attackUIMode = false;
     private bool attackRangeMode = false;
+
     private int actionPoint;
+    private int maxActionPoint = 3;
 
     void Start()
-    {  
-        actionPoint = 3;
-      
-        myX = myY = 0;
-        for(int i=0; i<4; i++)
+    {
+        myBC = gameObject.GetComponent<BattleChar>();
+        actionPoint = maxActionPoint;
+        attackPos = LookRotation.D;
+        gameObject.transform.position = BattleData.Instance.mapBox[myY][myX];
+        BattleData.Instance.mapOnChar[myY][myX] = myBC;
+        for (int i=0; i<4; i++)
         {
             moveAreas[i] = Instantiate(moveArea, gameObject.transform);
             moveAreas[i].name = "MoveArea";
-            moveAreas[i].transform.position = BattleData.Instance.mapBox[myY][myX] + BattleData.Instance.vecOne[i];
+            moveAreas[i].transform.localPosition = BattleData.Instance.vecOne[i];
         }
         for (int i = 0; i < 10; i++)
         {
@@ -69,7 +74,10 @@ public class BattleChar : MonoBehaviour
             if(attackUIMode)
                 ToggleAttackUI();
             if (attackRangeMode)
+            {
+                ClearAttackArea();
                 ToggleAttackArea();
+            }  
         }
         if(attackArea.activeSelf)
         {
@@ -102,8 +110,10 @@ public class BattleChar : MonoBehaviour
         {
             if (mousePosInt == BattleData.Instance.mapBox[myY][myX] + BattleData.Instance.vecOne[i] && CheckOutLine(i))
             {
+                BattleData.Instance.mapOnChar[myY][myX] = null;
                 myX += BattleData.Instance.vecOne[i].x;
                 myY += BattleData.Instance.vecOne[i].y;
+                BattleData.Instance.mapOnChar[myY][myX] = myBC;
                 gameObject.transform.position = BattleData.Instance.mapBox[myY][myX];
                 actionPoint--;
                 moveMode = false;
@@ -122,6 +132,7 @@ public class BattleChar : MonoBehaviour
     #region 어택 UI
     private void AttackPosChange()
     {
+        if (actionPoint < testData[attackNum].useAP) return;
         if (!attackUIMode&&attackRangeMode)
         {
             if (Input.GetKeyDown(KeyCode.W))
@@ -144,14 +155,13 @@ public class BattleChar : MonoBehaviour
                 attackPos = LookRotation.D;
                 ChangeAttackArea(attackNum);
             }
-            
         }
     }
 
     public void ChangeAttackArea(int num)
     {
         attackNum = num;
-        ClearAttackArea();
+        if (actionPoint < testData[num].useAP) return;
         AttackAreaRotation();
     }
 
@@ -218,14 +228,17 @@ public class BattleChar : MonoBehaviour
                 Debug.Log($"{i}번에서 탈출!");
                 break;
             }
-            if (mousePosInt == attackAreas[i].transform.position&&CheckAttackOutLine(i))
+            if (CheckAttackOutLine(i)&& BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x]!=null)
             {
-                Debug.Log($"{mousePosInt} 위치의 적 공격!");
-                Debug.Log($"{testData[attackNum].damage}의 데미지!");
-                actionPoint -= testData[attackNum].useAP;
-                attackRangeMode = false;
-                GoToMoveUI();
-                break;
+                if(attackAreas[i].transform.position == BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x]?.transform.position)
+                {
+                    BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x].Hit(testData[attackNum].damage);
+                    actionPoint -= testData[attackNum].useAP;
+                    attackRangeMode = false;
+                    GoToMoveUI();
+                    break;
+                }
+
             }
         }
     }
@@ -239,19 +252,28 @@ public class BattleChar : MonoBehaviour
 
     #endregion
 
+    public void Hit(float damage)
+    {
+        Debug.Log($"{gameObject.name}이(가) 공격받았습니다.");
+        Debug.Log($"{damage}의 데미지!");
+    }
+
     public void MyTurn()
     {
-        actionPoint = 3;
+        actionPoint = maxActionPoint;
+        maxActionPoint = 3;
     }
 
     public void Move()
     {
+        if (actionPoint <= 0) return;
         moveMode = !moveMode;
         ToggleMoveArea();
     }
 
     public void ToggleAttackUI()
     {
+        if (actionPoint <= 0) return;
         attackUIMode = !attackUIMode;
         moveMode = false;
         attackRangeMode = false;
@@ -263,10 +285,11 @@ public class BattleChar : MonoBehaviour
 
     public void ToggleAttackArea()
     {
+        if (actionPoint < testData[attackNum].useAP) return;
         attackUIMode = !attackUIMode;
         attackRangeMode = !attackRangeMode;
+        moveMode = false;
         attackPanel.SetActive(attackUIMode);
-        ClearAttackArea();
     }
 
     private void GoToMoveUI()

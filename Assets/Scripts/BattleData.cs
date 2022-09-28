@@ -17,6 +17,7 @@ public class BattleData : MonoSingleton<BattleData>
     public IntVec2 mapSize;
 
     public List<List<Vector3Int>> mapBox = new List<List<Vector3Int>>();
+    public List<List<BattleChar>> mapOnChar = new List<List<BattleChar>>();
 
     private void Awake()
     {
@@ -35,9 +36,11 @@ public class BattleData : MonoSingleton<BattleData>
         for (int i = 0; i < mapSize.y; i++)
         {
             mapBox.Add(new List<Vector3Int>());
+            mapOnChar.Add(new List<BattleChar>());
             for (int j = 0; j < mapSize.x; j++)
             {
                 mapBox[i].Add(new Vector3Int(j, i));
+                mapOnChar[i].Add(new BattleChar());
             }
         }
     }
