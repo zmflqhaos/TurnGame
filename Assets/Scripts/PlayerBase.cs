@@ -1,23 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
-/*
- * 여기에 뭘 만들어야할까
- * 6. 스텟은 저장되어있는 스텟중에 하나 때어오면 되는거고, 누구의 스텟을 들고올지 구분하는 무언가가 필요해
- * 일단 이정도만 하고 이후에 추가하기.
-*/
-
-public class BattleChar : MonoBehaviour
+public class PlayerBase : BattleBase
 {
-    [SerializeField]
-    private AttackData[] testData; //나중에 바꿔야해 제발
-
-    private BattleChar myBC;
-    public int myX;
-    public int myY;
-
     private GameObject[] moveAreas = new GameObject[4];
     [SerializeField]
     private GameObject moveArea;
@@ -37,22 +23,15 @@ public class BattleChar : MonoBehaviour
     private Vector3 mousePos;
     private Vector3Int mousePosInt;
 
-    private bool isPlayerTeam = true;
-    private bool moveMode = false;
-    private bool attackUIMode = false;
-    private bool attackRangeMode = false;
-
-    private int actionPoint;
-    private int maxActionPoint = 3;
-
-    void Start()
+    private void Start()
     {
-        myBC = gameObject.GetComponent<BattleChar>();
+        myBB = gameObject.GetComponent<BattleBase>();
         actionPoint = maxActionPoint;
-        attackPos = LookRotation.D;
+
         gameObject.transform.position = BattleData.Instance.mapBox[myY][myX];
-        BattleData.Instance.mapOnChar[myY][myX] = myBC;
-        for (int i=0; i<4; i++)
+        BattleData.Instance.mapOnChar[myY][myX] = myBB;
+        attackPos = LookRotation.D;
+        for (int i = 0; i < 4; i++)
         {
             moveAreas[i] = Instantiate(moveArea, gameObject.transform);
             moveAreas[i].name = "MoveArea";
@@ -71,15 +50,15 @@ public class BattleChar : MonoBehaviour
         AttackPosChange();
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            if(attackUIMode)
+            if (attackUIMode)
                 ToggleAttackUI();
             if (attackRangeMode)
             {
                 ClearAttackArea();
                 ToggleAttackArea();
-            }  
+            }
         }
-        if(attackArea.activeSelf)
+        if (attackArea.activeSelf)
         {
             Attack();
         }
@@ -89,7 +68,7 @@ public class BattleChar : MonoBehaviour
     private void ToggleMoveArea()
     {
         moveArea.SetActive(moveMode);
-        if(moveMode)
+        if (moveMode)
         {
             for (int i = 0; i < 4; i++)
                 moveAreas[i].SetActive(CheckOutLine(i));
@@ -104,16 +83,16 @@ public class BattleChar : MonoBehaviour
     private void AreaClickMove()
     {
         if (!Input.GetMouseButtonDown(0) || !moveMode) return;
-        mousePos = BattleData.Instance.mainCam.ScreenToWorldPoint(Input.mousePosition)+new Vector3(0, 0, 10);
+        mousePos = BattleData.Instance.mainCam.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 10);
         mousePosInt = Vector3Int.RoundToInt(mousePos);
         for (int i = 0; i < 4; i++)
         {
-            if (mousePosInt == BattleData.Instance.mapBox[myY][myX] + BattleData.Instance.vecOne[i] && CheckOutLine(i))
+            if (mousePosInt == BattleData.Instance.mapBox[myY][myX] + BattleData.Instance.vecOne[i] && CheckOutLine(i) && !BattleData.Instance.mapOnChar[myY + BattleData.Instance.vecOne[i].y][myX + BattleData.Instance.vecOne[i].x])
             {
                 BattleData.Instance.mapOnChar[myY][myX] = null;
                 myX += BattleData.Instance.vecOne[i].x;
                 myY += BattleData.Instance.vecOne[i].y;
-                BattleData.Instance.mapOnChar[myY][myX] = myBC;
+                BattleData.Instance.mapOnChar[myY][myX] = myBB;
                 gameObject.transform.position = BattleData.Instance.mapBox[myY][myX];
                 actionPoint--;
                 moveMode = false;
@@ -133,7 +112,7 @@ public class BattleChar : MonoBehaviour
     private void AttackPosChange()
     {
         if (actionPoint < testData[attackNum].useAP) return;
-        if (!attackUIMode&&attackRangeMode)
+        if (!attackUIMode && attackRangeMode)
         {
             if (Input.GetKeyDown(KeyCode.W))
             {
@@ -170,7 +149,7 @@ public class BattleChar : MonoBehaviour
         Vector3Int vec = new Vector3Int();
         switch (attackPos)
         {
-            case LookRotation.W :
+            case LookRotation.W:
                 for (int i = 0; i < testData[attackNum].attackRange.Count; i++)
                 {
                     vec.Set(-testData[attackNum].attackRange[i].y, testData[attackNum].attackRange[i].x, 0);
@@ -221,43 +200,43 @@ public class BattleChar : MonoBehaviour
         mousePos = BattleData.Instance.mainCam.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 10);
         mousePosInt = Vector3Int.RoundToInt(mousePos);
 
-        for(int i=0; i<attackAreas.Length; i++)
+        for (int i = 0; i < attackAreas.Length; i++)
         {
             if (!attackAreas[i].activeSelf)
             {
                 Debug.Log($"{i}번에서 탈출!");
                 break;
             }
-            if (CheckAttackOutLine(i)&& BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x]!=null)
+            if (CheckAttackOutLine(i))
             {
-                if(attackAreas[i].transform.position == BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x]?.transform.position)
+                if (BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x] != null)
                 {
-                    BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x].Hit(testData[attackNum].damage);
-                    actionPoint -= testData[attackNum].useAP;
-                    attackRangeMode = false;
-                    GoToMoveUI();
-                    break;
+                    if (attackAreas[i].transform.position == BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x]?.transform.position)
+                    {
+                        BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x].Hit(testData[attackNum].damage);
+                        actionPoint -= testData[attackNum].useAP;
+                        attackRangeMode = false;
+                        GoToMoveUI();
+                        break;
+                    }
                 }
-
             }
         }
     }
 
     private bool CheckAttackOutLine(int i)
     {
-        float x = attackAreas[i].transform.position.x;
-        float y = attackAreas[i].transform.position.y;
+        float x = attackAreas[i].transform.localPosition.x;
+        float y = attackAreas[i].transform.localPosition.y;
         return x >= 0 && x < BattleData.Instance.mapSize.x && y >= 0 && y < BattleData.Instance.mapSize.y;
     }
 
     #endregion
 
-    public void Hit(float damage)
+    public override void Hit(float damage)
     {
-        Debug.Log($"{gameObject.name}이(가) 공격받았습니다.");
         Debug.Log($"{damage}의 데미지!");
     }
-
     public void MyTurn()
     {
         actionPoint = maxActionPoint;
