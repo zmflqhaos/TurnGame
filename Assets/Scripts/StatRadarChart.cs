@@ -32,17 +32,17 @@ public class StatRadarChart : MonoBehaviour
         float radarChartSize = 385f;
         float angleInc = 360 / 6f;
 
-        Vector3 hpVertex = Quaternion.Euler(0, 0, -angleInc * 0) * Vector3.up * radarChartSize * gameData._playersData[number]._playerStat._vitStat / Stat.STAT_MAX;
+        Vector3 hpVertex = Quaternion.Euler(0, 0, -angleInc * 0) * Vector3.up * radarChartSize * gameData._playersData[number]._charStat._vitStat / Stat.STAT_MAX;
 
-        Vector3 mpVertex = Quaternion.Euler(0, 0, -angleInc * 1) * Vector3.up * radarChartSize * gameData._playersData[number]._playerStat._mtlStat / Stat.STAT_MAX;
+        Vector3 mpVertex = Quaternion.Euler(0, 0, -angleInc * 1) * Vector3.up * radarChartSize * gameData._playersData[number]._charStat._mtlStat / Stat.STAT_MAX;
 
-        Vector3 strVertex = Quaternion.Euler(0, 0, -angleInc * 2) * Vector3.up * radarChartSize * gameData._playersData[number]._playerStat._strStat / Stat.STAT_MAX;
+        Vector3 strVertex = Quaternion.Euler(0, 0, -angleInc * 2) * Vector3.up * radarChartSize * gameData._playersData[number]._charStat._strStat / Stat.STAT_MAX;
 
-        Vector3 dexVertex = Quaternion.Euler(0, 0, -angleInc * 3) * Vector3.up * radarChartSize * gameData._playersData[number]._playerStat._dexStat / Stat.STAT_MAX;
+        Vector3 dexVertex = Quaternion.Euler(0, 0, -angleInc * 3) * Vector3.up * radarChartSize * gameData._playersData[number]._charStat._dexStat / Stat.STAT_MAX;
 
-        Vector3 inteVertex = Quaternion.Euler(0, 0, -angleInc * 4) * Vector3.up * radarChartSize * gameData._playersData[number]._playerStat._intStat / Stat.STAT_MAX;
+        Vector3 inteVertex = Quaternion.Euler(0, 0, -angleInc * 4) * Vector3.up * radarChartSize * gameData._playersData[number]._charStat._intStat / Stat.STAT_MAX;
 
-        Vector3 chaVertex = Quaternion.Euler(0, 0, -angleInc * 5) * Vector3.up * radarChartSize * gameData._playersData[number]._playerStat._chaStat / Stat.STAT_MAX;
+        Vector3 chaVertex = Quaternion.Euler(0, 0, -angleInc * 5) * Vector3.up * radarChartSize * gameData._playersData[number]._charStat._chaStat / Stat.STAT_MAX;
 
         Vector3[] vertices = new Vector3[7];
         Vector2[] uv = new Vector2[7];

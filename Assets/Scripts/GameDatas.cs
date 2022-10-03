@@ -2,52 +2,47 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-using System.Reflection;
 
 //게임 전체를 관리하는 데이터
-[System.Serializable]
+[Serializable]
 public class GameData
 {
-	public List<PlayerData> _playersData;
-	public List<ItemData> _publicInv;
+	public List<CharactorData> _playersData;
+	public List<ItemSO> _publicInv;
 }
 
 
-//플레이어 한명을 관리하는 데이터
-[System.Serializable]
-public class PlayerData
+//캐릭터 하나를 관리하는 데이터
+[Serializable]
+public class CharactorData
 {
 	public string _name;
-	public Stat _playerStat;
-	public List<ItemData> _privateInv;
+	public Stat _charStat;
+	public List<ItemSO> _privateInv;
+    public List<AttackSO> _charAtd;
 }
-
 
 //아이템 하나에 들어갈 데이터
-[CreateAssetMenu(menuName = "SO/ItemData")]
-public class ItemData : ScriptableObject
-{
-	public string _name;
-	public Category _category;
-}
 
 
 //스텟을 보관하는 클래스
-[System.Serializable]
+[Serializable]
 public class Stat
 {
     public static int STAT_MIN = 0;
     public static int STAT_MAX = 25;
-
+    /// <summary>
+    /// ㅁㄴ
+    /// </summary>
     public int _vitStat;
-    public int _mtlStat;
-    public int _strStat;
-    public int _dexStat;
-    public int _intStat;
-    public int _chaStat;
+    public int _mtlStat;//정신력
+    public int _strStat;//힘
+    public int _dexStat;//민첩
+    public int _intStat;//지능
+    public int _chaStat;//매력
 }
 
-[System.Serializable]
+[Serializable]
 public class IntVec2
 {
     public int x;

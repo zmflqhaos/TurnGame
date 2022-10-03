@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 /*
  * 여기에 뭘 만들어야할까
@@ -11,20 +10,44 @@ using UnityEngine.Tilemaps;
 
 public class BattleBase : MonoBehaviour
 {
-    [SerializeField]
-    public AttackData[] testData; //나중에 바꿔야해
-
     public BattleBase myBB;
     public int myX;
     public int myY;
 
-    public bool isPlayerTeam = true;
-    public bool moveMode = false;
-    public bool attackUIMode = false;
-    public bool attackRangeMode = false;
+    public bool isPlayerTeam;
+    public bool moveMode;
+    public bool attackUIMode;
+    public bool attackRangeMode;
 
     public int actionPoint;
-    public int maxActionPoint = 3;
+    public int maxActionPoint;
 
-    public virtual void Hit(float damage) { }
+    public int hp;
+    public float finalDamage;
+
+    public virtual void Start()
+    {
+        myBB = gameObject.GetComponent<BattleBase>();
+
+        gameObject.transform.position = BattleData.Instance.mapBox[myY][myX];
+        BattleData.Instance.mapOnChar[myY][myX] = myBB;
+    }
+
+    public virtual void Hit(float damage) 
+    {
+        hp -= (int)damage;
+
+        if (hp <= 0)
+        {
+            Die();
+            return;
+        }
+
+        Debug.Log($"{gameObject.name}의 남은 HP : {hp}");
+    }
+    public virtual void Die() 
+    {
+        Debug.Log($"{gameObject.name}가 사망하였습니다.");
+        Destroy(gameObject);
+    }
 }

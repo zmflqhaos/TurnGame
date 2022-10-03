@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerBase : BattleBase
 {
+    private CharactorData myData;
+
     private GameObject[] moveAreas = new GameObject[4];
     [SerializeField]
     private GameObject moveArea;
@@ -23,13 +25,12 @@ public class PlayerBase : BattleBase
     private Vector3 mousePos;
     private Vector3Int mousePosInt;
 
-    private void Start()
-    {
-        myBB = gameObject.GetComponent<BattleBase>();
-        actionPoint = maxActionPoint;
 
-        gameObject.transform.position = BattleData.Instance.mapBox[myY][myX];
-        BattleData.Instance.mapOnChar[myY][myX] = myBB;
+    public override void Start()
+    {
+        base.Start();
+        myData = GameManager.Instance.CurrentGameData._playersData[0];
+        actionPoint = maxActionPoint;
         attackPos = LookRotation.D;
         for (int i = 0; i < 4; i++)
         {
@@ -111,7 +112,7 @@ public class PlayerBase : BattleBase
     #region 어택 UI
     private void AttackPosChange()
     {
-        if (actionPoint < testData[attackNum].useAP) return;
+        if (actionPoint < myData._charAtd[attackNum].useAP) return;
         if (!attackUIMode && attackRangeMode)
         {
             if (Input.GetKeyDown(KeyCode.W))
@@ -140,7 +141,7 @@ public class PlayerBase : BattleBase
     public void ChangeAttackArea(int num)
     {
         attackNum = num;
-        if (actionPoint < testData[num].useAP) return;
+        if (actionPoint < myData._charAtd[num].useAP) return;
         AttackAreaRotation();
     }
 
@@ -150,33 +151,33 @@ public class PlayerBase : BattleBase
         switch (attackPos)
         {
             case LookRotation.W:
-                for (int i = 0; i < testData[attackNum].attackRange.Count; i++)
+                for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
                 {
-                    vec.Set(-testData[attackNum].attackRange[i].y, testData[attackNum].attackRange[i].x, 0);
+                    vec.Set(-myData._charAtd[attackNum].attackRange[i].y, myData._charAtd[attackNum].attackRange[i].x, 0);
                     attackAreas[i].transform.position = BattleData.Instance.mapBox[myY][myX] + vec;
                     attackAreas[i].SetActive(true);
                 }
                 break;
             case LookRotation.A:
-                for (int i = 0; i < testData[attackNum].attackRange.Count; i++)
+                for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
                 {
-                    vec.Set(-testData[attackNum].attackRange[i].x, -testData[attackNum].attackRange[i].y, 0);
+                    vec.Set(-myData._charAtd[attackNum].attackRange[i].x, -myData._charAtd[attackNum].attackRange[i].y, 0);
                     attackAreas[i].transform.position = BattleData.Instance.mapBox[myY][myX] + vec;
                     attackAreas[i].SetActive(true);
                 }
                 break;
             case LookRotation.S:
-                for (int i = 0; i < testData[attackNum].attackRange.Count; i++)
+                for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
                 {
-                    vec.Set(testData[attackNum].attackRange[i].y, -testData[attackNum].attackRange[i].x, 0);
+                    vec.Set(myData._charAtd[attackNum].attackRange[i].y, -myData._charAtd[attackNum].attackRange[i].x, 0);
                     attackAreas[i].transform.position = BattleData.Instance.mapBox[myY][myX] + vec;
                     attackAreas[i].SetActive(true);
                 }
                 break;
             case LookRotation.D:
-                for (int i = 0; i < testData[attackNum].attackRange.Count; i++)
+                for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
                 {
-                    vec.Set(testData[attackNum].attackRange[i].x, testData[attackNum].attackRange[i].y, 0);
+                    vec.Set(myData._charAtd[attackNum].attackRange[i].x, myData._charAtd[attackNum].attackRange[i].y, 0);
                     attackAreas[i].transform.position = BattleData.Instance.mapBox[myY][myX] + vec;
                     attackAreas[i].SetActive(true);
                 }
@@ -209,12 +210,12 @@ public class PlayerBase : BattleBase
             }
             if (CheckAttackOutLine(i))
             {
-                if (BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x] != null)
+                if(BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x] != null)
                 {
-                    if (attackAreas[i].transform.position == BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x]?.transform.position)
+                    if (attackAreas[i].transform.position == BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x].transform.position)
                     {
-                        BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x].Hit(testData[attackNum].damage);
-                        actionPoint -= testData[attackNum].useAP;
+                        BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x].Hit(myData._charAtd[attackNum].damage);
+                        actionPoint -= myData._charAtd[attackNum].useAP;
                         attackRangeMode = false;
                         GoToMoveUI();
                         break;
@@ -226,8 +227,8 @@ public class PlayerBase : BattleBase
 
     private bool CheckAttackOutLine(int i)
     {
-        float x = attackAreas[i].transform.localPosition.x;
-        float y = attackAreas[i].transform.localPosition.y;
+        float x = attackAreas[i].transform.position.x;
+        float y = attackAreas[i].transform.position.y;
         return x >= 0 && x < BattleData.Instance.mapSize.x && y >= 0 && y < BattleData.Instance.mapSize.y;
     }
 
@@ -235,7 +236,7 @@ public class PlayerBase : BattleBase
 
     public override void Hit(float damage)
     {
-        Debug.Log($"{damage}의 데미지!");
+        base.Hit(damage);
     }
     public void MyTurn()
     {
@@ -264,7 +265,7 @@ public class PlayerBase : BattleBase
 
     public void ToggleAttackArea()
     {
-        if (actionPoint < testData[attackNum].useAP) return;
+        if (actionPoint < myData._charAtd[attackNum].useAP) return;
         attackUIMode = !attackUIMode;
         attackRangeMode = !attackRangeMode;
         moveMode = false;

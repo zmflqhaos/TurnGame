@@ -9,20 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c209bf779aac82049b59b8f56b33d6ab, type: 3}
-  m_Name: RoundAttack
+  m_Script: {fileID: 11500000, guid: 381950a3b2c22fd468ed1447a20e9cb4, type: 3}
+  m_Name: Fire
   m_EditorClassIdentifier: 
   attackRange:
   - {x: 1, y: 0, z: 0}
-  - {x: -1, y: 0, z: 0}
-  - {x: 0, y: 1, z: 0}
-  - {x: 0, y: -1, z: 0}
-  - {x: 1, y: 1, z: 0}
-  - {x: 1, y: -1, z: 0}
-  - {x: -1, y: 1, z: 0}
-  - {x: -1, y: -1, z: 0}
-  damage: 10
-  damageType: 0
+  - {x: 2, y: 0, z: 0}
+  - {x: 3, y: 0, z: 0}
+  damage: 20
+  damageType: 1
   useAP: 2
-  isSplash: 1
-  splashCount: 8
+  isSplash: 0
+  splashCount: 0

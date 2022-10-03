@@ -14,61 +14,61 @@ public class RaderChart : MonoBehaviour
 
         DeBuger.CreateButton(new Vector2(800, 600), "hp++", new Vector2(80, 40), () =>
         {
-            gameData._playersData[0]._playerStat._vitStat++;
+            gameData._playersData[0]._charStat._vitStat++;
         });
 
         DeBuger.CreateButton(new Vector2(700, 600), "hp--", new Vector2(80, 40), () =>
         {
-            gameData._playersData[0]._playerStat._vitStat--;
+            gameData._playersData[0]._charStat._vitStat--;
         });
 
         DeBuger.CreateButton(new Vector2(800, 550), "mp++", new Vector2(80, 40), () =>
         {
-            gameData._playersData[0]._playerStat._mtlStat++;
+            gameData._playersData[0]._charStat._mtlStat++;
         });
 
         DeBuger.CreateButton(new Vector2(700, 550), "mp--", new Vector2(80, 40), () =>
         {
-            gameData._playersData[0]._playerStat._mtlStat--;
+            gameData._playersData[0]._charStat._mtlStat--;
         });
 
         DeBuger.CreateButton(new Vector2(600, 600), "str++", new Vector2(80, 40), () =>
         {
-            gameData._playersData[0]._playerStat._strStat++;
+            gameData._playersData[0]._charStat._strStat++;
         });
 
         DeBuger.CreateButton(new Vector2(500, 600), "str--", new Vector2(80, 40), () =>
         {
-            gameData._playersData[0]._playerStat._strStat--;
+            gameData._playersData[0]._charStat._strStat--;
         });
 
         DeBuger.CreateButton(new Vector2(600, 550), "dex++", new Vector2(80, 40), () =>
         {
-            gameData._playersData[0]._playerStat._dexStat++;
+            gameData._playersData[0]._charStat._dexStat++;
         });
 
         DeBuger.CreateButton(new Vector2(500, 550), "dex--", new Vector2(80, 40), () =>
         {
-            gameData._playersData[0]._playerStat._dexStat--;
+            gameData._playersData[0]._charStat._dexStat--;
         });
         DeBuger.CreateButton(new Vector2(400, 600), "int++", new Vector2(80, 40), () =>
         {
-            gameData._playersData[0]._playerStat._intStat++;
+            gameData._playersData[0]._charStat._intStat++;
         });
 
         DeBuger.CreateButton(new Vector2(300, 600), "int--", new Vector2(80, 40), () =>
         {
-            gameData._playersData[0]._playerStat._intStat--;
+            gameData._playersData[0]._charStat._intStat--;
         });
 
         DeBuger.CreateButton(new Vector2(400, 550), "cha++", new Vector2(80, 40), () =>
         {
-            gameData._playersData[0]._playerStat._chaStat++;
+            gameData._playersData[0]._charStat._chaStat++;
         });
 
         DeBuger.CreateButton(new Vector2(300, 550), "cha--", new Vector2(80, 40), () =>
         {
-            gameData._playersData[0]._playerStat._chaStat--;
+            gameData._playersData[0]._charStat._chaStat--;
         });
     }
 

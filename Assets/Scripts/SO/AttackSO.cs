@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "SO/AttackData")]
-public class AttackData : ScriptableObject
+[CreateAssetMenu(menuName = "SO/Attack")]
+public class AttackSO : ScriptableObject
 {
     public List<Vector3Int> attackRange;//공격범위
     public float damage; //데미지

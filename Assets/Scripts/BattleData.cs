@@ -40,7 +40,7 @@ public class BattleData : MonoSingleton<BattleData>
             for (int j = 0; j < mapSize.x; j++)
             {
                 mapBox[i].Add(new Vector3Int(j, i));
-                mapOnChar[i].Add(new BattleBase());
+                mapOnChar[i].Add(null);
             }
         }
     }
