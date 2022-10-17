@@ -88,13 +88,11 @@ public class PlayerBase : BattleBase
         mousePosInt = Vector3Int.RoundToInt(mousePos);
         for (int i = 0; i < 4; i++)
         {
-            if (mousePosInt == BattleData.Instance.mapBox[myY][myX] + BattleData.Instance.vecOne[i] && CheckOutLine(i) && !BattleData.Instance.mapOnChar[myY + BattleData.Instance.vecOne[i].y][myX + BattleData.Instance.vecOne[i].x])
+            if (mousePosInt == myPos + BattleData.Instance.vecOne[i] && CheckOutLine(i))
             {
-                BattleData.Instance.mapOnChar[myY][myX] = null;
-                myX += BattleData.Instance.vecOne[i].x;
-                myY += BattleData.Instance.vecOne[i].y;
-                BattleData.Instance.mapOnChar[myY][myX] = myBB;
-                gameObject.transform.position = BattleData.Instance.mapBox[myY][myX];
+                myPos.x += BattleData.Instance.vecOne[i].x;
+                myPos.y += BattleData.Instance.vecOne[i].y;
+                gameObject.transform.position = myPos;
                 actionPoint--;
                 moveMode = false;
                 break;
@@ -105,7 +103,7 @@ public class PlayerBase : BattleBase
 
     private bool CheckOutLine(int i)
     {
-        return myX + BattleData.Instance.vecOne[i].x >= 0 && myX + BattleData.Instance.vecOne[i].x < BattleData.Instance.mapSize.x && myY + BattleData.Instance.vecOne[i].y >= 0 && myY + BattleData.Instance.vecOne[i].y < BattleData.Instance.mapSize.y;
+        return myPos.x + BattleData.Instance.vecOne[i].x >= 0 && myPos.y + BattleData.Instance.vecOne[i].y >= 0 ;
     }
     #endregion
 
@@ -154,7 +152,7 @@ public class PlayerBase : BattleBase
                 for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
                 {
                     vec.Set(-myData._charAtd[attackNum].attackRange[i].y, myData._charAtd[attackNum].attackRange[i].x, 0);
-                    attackAreas[i].transform.position = BattleData.Instance.mapBox[myY][myX] + vec;
+                    attackAreas[i].transform.position = myPos + vec;
                     attackAreas[i].SetActive(true);
                 }
                 break;
@@ -162,7 +160,7 @@ public class PlayerBase : BattleBase
                 for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
                 {
                     vec.Set(-myData._charAtd[attackNum].attackRange[i].x, -myData._charAtd[attackNum].attackRange[i].y, 0);
-                    attackAreas[i].transform.position = BattleData.Instance.mapBox[myY][myX] + vec;
+                    attackAreas[i].transform.position = myPos + vec;
                     attackAreas[i].SetActive(true);
                 }
                 break;
@@ -170,7 +168,7 @@ public class PlayerBase : BattleBase
                 for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
                 {
                     vec.Set(myData._charAtd[attackNum].attackRange[i].y, -myData._charAtd[attackNum].attackRange[i].x, 0);
-                    attackAreas[i].transform.position = BattleData.Instance.mapBox[myY][myX] + vec;
+                    attackAreas[i].transform.position = myPos + vec;
                     attackAreas[i].SetActive(true);
                 }
                 break;
@@ -178,7 +176,7 @@ public class PlayerBase : BattleBase
                 for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
                 {
                     vec.Set(myData._charAtd[attackNum].attackRange[i].x, myData._charAtd[attackNum].attackRange[i].y, 0);
-                    attackAreas[i].transform.position = BattleData.Instance.mapBox[myY][myX] + vec;
+                    attackAreas[i].transform.position = myPos + vec;
                     attackAreas[i].SetActive(true);
                 }
                 break;
@@ -229,7 +227,8 @@ public class PlayerBase : BattleBase
     {
         float x = attackAreas[i].transform.position.x;
         float y = attackAreas[i].transform.position.y;
-        return x >= 0 && x < BattleData.Instance.mapSize.x && y >= 0 && y < BattleData.Instance.mapSize.y;
+        return true;
+        //return x >= 0 && x < BattleData.Instance.mapSize.x && y >= 0 && y < BattleData.Instance.mapSize.y;
     }
 
     #endregion

@@ -11,8 +11,7 @@ using UnityEngine;
 public class BattleBase : MonoBehaviour
 {
     public BattleBase myBB;
-    public int myX;
-    public int myY;
+    public Vector3Int myPos;
 
     public bool isPlayerTeam;
     public bool moveMode;
@@ -29,8 +28,7 @@ public class BattleBase : MonoBehaviour
     {
         myBB = gameObject.GetComponent<BattleBase>();
 
-        gameObject.transform.position = BattleData.Instance.mapBox[myY][myX];
-        BattleData.Instance.mapOnChar[myY][myX] = myBB;
+        gameObject.transform.position = myPos;
     }
 
     public virtual void Hit(float damage) 

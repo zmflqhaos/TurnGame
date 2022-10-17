@@ -29,24 +29,34 @@ public class CharactorData
 [Serializable]
 public class Stat
 {
+    //최소, 최대스텟
     public static int STAT_MIN = 0;
     public static int STAT_MAX = 25;
+
     /// <summary>
-    /// ㅁㄴ
+    /// 체력
     /// </summary>
     public int _vitStat;
-    public int _mtlStat;//정신력
-    public int _strStat;//힘
-    public int _dexStat;//민첩
-    public int _intStat;//지능
-    public int _chaStat;//매력
-}
-
-[Serializable]
-public class IntVec2
-{
-    public int x;
-    public int y;
+    /// <summary>
+    /// 정신력
+    /// </summary>
+    public int _mtlStat;
+    /// <summary>
+    /// 힘
+    /// </summary>
+    public int _strStat;
+    /// <summary>
+    /// 민첩
+    /// </summary>
+    public int _dexStat;
+    /// <summary>
+    /// 지능
+    /// </summary>
+    public int _intStat;
+    /// <summary>
+    /// 매력
+    /// </summary>
+    public int _chaStat;
 }
 
 //아이템의 종류를 구분하는 이넘
