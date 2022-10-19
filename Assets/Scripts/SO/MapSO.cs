@@ -5,7 +5,6 @@ using UnityEngine;
 [CreateAssetMenu (menuName = "SO/Map")]
 public class MapSO : ScriptableObject
 {
-    public int Xsize;
-    public int Ysize;
-    public int[,] mapTile = new int[1, 1];
+    public Vector2 size;
+    public int[,] mapTile;
 }

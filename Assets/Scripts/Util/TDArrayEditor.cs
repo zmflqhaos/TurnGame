@@ -4,48 +4,48 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(MapSO))]
+[CanEditMultipleObjects]
 public class TDArrayEditor : Editor
 {
     MapSO map;
-    MapSO clone = new MapSO();
+    Vector2 _size;
 
-    public MapSO DeepCopy(MapSO map)
-    {
-        MapSO deepCopyClass = new MapSO();
-        deepCopyClass.mapTile = map.mapTile;
-        deepCopyClass.Xsize = map.Xsize;
-        deepCopyClass.Ysize = map.Ysize;
-        return deepCopyClass;
-    }
+    SerializedProperty mapSize;
+    SerializedProperty mapTile;
 
     private void OnEnable()
     {
         map = target as MapSO;
-        clone = DeepCopy(map);
+
+        mapSize = serializedObject.FindProperty("mapSize");
+        mapTile = serializedObject.FindProperty("mapTile");
     }
 
     public override void OnInspectorGUI()
     {
-        base.OnInspectorGUI();
+        serializedObject.Update();
+        EditorGUILayout.PropertyField(mapSize);
+        EditorGUILayout.PropertyField(mapTile);
+        map.size = EditorGUILayout.Vector2Field("Map Size", map.size);
 
-        EditorGUILayout.LabelField("Tile Map");
-
-        if (clone.Xsize != map.Xsize || clone.Ysize != map.Ysize)
+        if (_size.x != map.size.x || _size.y != map.size.y)
         {
-            map.mapTile = new int[map.Ysize, map.Xsize];
-
-            clone = DeepCopy(map);
+            _size.x = map.size.x;
+            _size.y = map.size.y;
+            map.mapTile = new int[(int)_size.x, (int)_size.y];
         }
 
-        if (clone.Xsize>0&&clone.Ysize>0)
+        EditorGUILayout.LabelField("Tile Map");
+        if (_size.x > 0 && _size.y > 0)
         {
-            for (int i = 0; i < clone.Ysize; i++)
+            for (int i = 0; i < _size.x; i++)
             {
                 EditorGUILayout.BeginHorizontal();
-                for (int k = 0; k < clone.Xsize; k++)
-                    map.mapTile[i, k] = EditorGUILayout.IntField(clone.mapTile[i, k]);
+                for (int k = 0; k < _size.y; k++)
+                    map.mapTile[i, k] = EditorGUILayout.IntField(map.mapTile[i, k]);
                 EditorGUILayout.EndHorizontal();
             }
         }
+        serializedObject.ApplyModifiedProperties();
     }
 }

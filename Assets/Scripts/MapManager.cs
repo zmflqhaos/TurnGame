@@ -20,11 +20,11 @@ public class MapManager : MonoSingleton<MapManager>
     {
         MapSO map = ChooseRandomMap();
 
-        for(int i=0; i<map.Ysize; i++)
+        for(int i=0; i<3; i++)
         {
-            for(int j=0; j<map.Xsize; j++)
+            for(int j=0; j<3; j++)
             {
-                var a = Instantiate(tiles[map.mapTile[i,j]].gameObject, new Vector3(-j, -i, 0), Quaternion.identity);
+                var a = Instantiate(tiles[0].gameObject, new Vector3(j, -i, 0), Quaternion.identity);
                 a.transform.SetParent(tileContainer);
             }
         }
