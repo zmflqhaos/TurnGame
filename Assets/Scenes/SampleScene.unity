@@ -2494,10 +2494,7 @@ MonoBehaviour:
         _dexStat: 5
         _intStat: 5
         _chaStat: 5
-      _privateInv:
-      - {fileID: 0}
-      - {fileID: 0}
-      - {fileID: 0}
+      _privateInv: []
       _charAtd:
       - {fileID: 11400000, guid: f525ef389040379418e22ebf08d3f510, type: 2}
       - {fileID: 11400000, guid: 8c0700f26ea770f4ebfa43ac5847e11a, type: 2}
@@ -4507,7 +4504,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myBB: {fileID: 0}
-  myPos: {x: 0, y: 0, z: 0}
+  myPos: {x: 2, y: 2, z: 0}
   isPlayerTeam: 0
   moveMode: 0
   attackUIMode: 0
