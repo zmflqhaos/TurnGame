@@ -8,4 +8,11 @@ public class GameManager : MonoSingleton<GameManager>
     private GameData gameData = null;
 
     public GameData CurrentGameData { get { return gameData; } set { gameData = value; } }
+
+    public Camera mainCam;
+
+    private void Awake()
+    {
+        mainCam = GameObject.Find("Main Camera").GetComponent<Camera>();
+    }
 }

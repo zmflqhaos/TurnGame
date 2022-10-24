@@ -11,7 +11,6 @@ public class GameData
 	public List<ItemSO> _publicInv;
 }
 
-
 //캐릭터 하나를 관리하는 데이터
 [Serializable]
 public class CharactorData
@@ -21,9 +20,6 @@ public class CharactorData
 	public List<ItemSO> _privateInv;
     public List<AttackSO> _charAtd;
 }
-
-//아이템 하나에 들어갈 데이터
-
 
 //스텟을 보관하는 클래스
 [Serializable]
@@ -37,22 +33,27 @@ public class Stat
     /// 체력
     /// </summary>
     public int _vitStat;
+
     /// <summary>
     /// 정신력
     /// </summary>
     public int _mtlStat;
+
     /// <summary>
     /// 힘
     /// </summary>
     public int _strStat;
+
     /// <summary>
     /// 민첩
     /// </summary>
     public int _dexStat;
+
     /// <summary>
     /// 지능
     /// </summary>
     public int _intStat;
+
     /// <summary>
     /// 매력
     /// </summary>
@@ -60,7 +61,7 @@ public class Stat
 }
 
 //아이템의 종류를 구분하는 이넘
-public enum Category
+public enum ItemCategory
 {
     WEAPON,
     ARMOR,
@@ -69,17 +70,27 @@ public enum Category
     ETC
 }
 
-public enum AttackCate
+//공격의 데미지 타입을 결정함
+public enum AttackCategory
 {
     Physical,
     Magic,
     True,
 }
 
+//바라보는 방향
 public enum LookRotation
 {
     W,
     A,
     S,
     D
+}
+
+//타일의 종류
+public enum TileCategory
+{
+    Grass,
+    Water,
+    Hill,
 }

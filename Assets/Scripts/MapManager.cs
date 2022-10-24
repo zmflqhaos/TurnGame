@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class MapManager : MonoSingleton<MapManager>
 {
+    public Vector3Int[] vecOne;
+    // = { new Vector3Int(0, 1, 0), new Vector3Int(-1, 0, 0), new Vector3Int(0, -1, 0), new Vector3Int(1, 0, 0) }
+    public Tile[,] mapTiles;
+
     [SerializeField]
     private MapSO[] mapSo;
     [SerializeField]
@@ -11,7 +15,7 @@ public class MapManager : MonoSingleton<MapManager>
     [SerializeField]
     private Transform tileContainer;
 
-    void Start()
+    void Awake()
     {
         MakeMap();
     }
@@ -19,13 +23,13 @@ public class MapManager : MonoSingleton<MapManager>
     private void MakeMap()
     {
         MapSO map = ChooseRandomMap();
-
+        mapTiles = new Tile[map.mapTile.GetCells().GetLength(0), map.mapTile.GetCells().GetLength(1)];
         for(int i=0; i<map.mapTile.GetCells().GetLength(0); i++)
         {
             for(int j=0; j< map.mapTile.GetCells().GetLength(1); j++)
             {
-                var a = Instantiate(tiles[map.mapTile.GetCell(j, i)].gameObject, new Vector3(j, i, 0), Quaternion.identity);
-                a.transform.SetParent(tileContainer);
+                mapTiles[i, j] = Instantiate(tiles[map.mapTile.GetCell(j, i)], new Vector3(j, i, 0), Quaternion.identity);
+                mapTiles[i, j].transform.SetParent(tileContainer);
             }
         }
     }
@@ -33,5 +37,10 @@ public class MapManager : MonoSingleton<MapManager>
     private MapSO ChooseRandomMap()
     {
         return mapSo[Random.Range(0, mapSo.Length)];
+    }
+
+    public Tile SelectTile(Vector3 pos)
+    {
+        return mapTiles[(int)pos.y, (int)pos.x];
     }
 }

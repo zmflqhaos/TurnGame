@@ -22,6 +22,10 @@ public class PlayerBase : BattleBase
     private LookRotation attackPos;
     private int attackNum;
 
+    public bool moveMode;
+    public bool attackUIMode;
+    public bool attackRangeMode;
+
     private Vector3 mousePos;
     private Vector3Int mousePosInt;
 
@@ -30,13 +34,12 @@ public class PlayerBase : BattleBase
     {
         base.Start();
         myData = GameManager.Instance.CurrentGameData._playersData[0];
-        actionPoint = maxActionPoint;
         attackPos = LookRotation.D;
         for (int i = 0; i < 4; i++)
         {
             moveAreas[i] = Instantiate(moveArea, gameObject.transform);
             moveAreas[i].name = "MoveArea";
-            moveAreas[i].transform.localPosition = BattleData.Instance.vecOne[i];
+            moveAreas[i].transform.localPosition = MapManager.Instance.vecOne[i];
         }
         for (int i = 0; i < 10; i++)
         {
@@ -47,7 +50,7 @@ public class PlayerBase : BattleBase
 
     void Update()
     {
-        AreaClickMove();
+        Move();
         AttackPosChange();
         if (Input.GetKeyDown(KeyCode.Tab))
         {
@@ -81,29 +84,35 @@ public class PlayerBase : BattleBase
         }
     }
 
-    private void AreaClickMove()
+    private void Move()
     {
         if (!Input.GetMouseButtonDown(0) || !moveMode) return;
-        mousePos = BattleData.Instance.mainCam.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 10);
+        mousePos = GameManager.Instance.mainCam.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 10);
         mousePosInt = Vector3Int.RoundToInt(mousePos);
         for (int i = 0; i < 4; i++)
         {
-            if (mousePosInt == myPos + BattleData.Instance.vecOne[i] && CheckOutLine(i))
+            if (mousePosInt == onTile.transform.position + MapManager.Instance.vecOne[i] && CheckOutLine(i))
             {
-                myPos.x += BattleData.Instance.vecOne[i].x;
-                myPos.y += BattleData.Instance.vecOne[i].y;
-                gameObject.transform.position = myPos;
+                onTile.OnTileChange();
+                onTile = MapManager.Instance.SelectTile(onTile.transform.position + MapManager.Instance.vecOne[i]);
+                onTile.OnTileChange(this);
+
+                gameObject.transform.position = onTile.transform.position;
+
                 actionPoint--;
                 moveMode = false;
                 break;
             }
         }
         ToggleMoveArea();
-    }
+    } 
 
     private bool CheckOutLine(int i)
     {
-        return myPos.x + BattleData.Instance.vecOne[i].x >= 0 && myPos.y + BattleData.Instance.vecOne[i].y >= 0 ;
+        return onTile.transform.position.x + MapManager.Instance.vecOne[i].x >= 0
+            && onTile.transform.position.x + MapManager.Instance.vecOne[i].x <= MapManager.Instance.mapTiles.GetLength(1)
+            && onTile.transform.position.y + MapManager.Instance.vecOne[i].y >= 0
+            && onTile.transform.position.y + MapManager.Instance.vecOne[i].y <= MapManager.Instance.mapTiles.GetLength(0);
     }
     #endregion
 
@@ -116,30 +125,29 @@ public class PlayerBase : BattleBase
             if (Input.GetKeyDown(KeyCode.W))
             {
                 attackPos = LookRotation.W;
-                ChangeAttackArea(attackNum);
             }
             if (Input.GetKeyDown(KeyCode.A))
             {
                 attackPos = LookRotation.A;
-                ChangeAttackArea(attackNum);
             }
             if (Input.GetKeyDown(KeyCode.S))
             {
                 attackPos = LookRotation.S;
-                ChangeAttackArea(attackNum);
             }
             if (Input.GetKeyDown(KeyCode.D))
             {
                 attackPos = LookRotation.D;
-                ChangeAttackArea(attackNum);
             }
+            AttackAreaRotation();
         }
     }
 
+    //버튼용
     public void ChangeAttackArea(int num)
     {
         attackNum = num;
         if (actionPoint < myData._charAtd[num].useAP) return;
+        if (myData._charAtd[num].isSplash) target = new BattleBase[myData._charAtd[num].splashCount];
         AttackAreaRotation();
     }
 
@@ -152,7 +160,7 @@ public class PlayerBase : BattleBase
                 for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
                 {
                     vec.Set(-myData._charAtd[attackNum].attackRange[i].y, myData._charAtd[attackNum].attackRange[i].x, 0);
-                    attackAreas[i].transform.position = myPos + vec;
+                    attackAreas[i].transform.position = gameObject.transform.position + vec;
                     attackAreas[i].SetActive(true);
                 }
                 break;
@@ -160,7 +168,7 @@ public class PlayerBase : BattleBase
                 for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
                 {
                     vec.Set(-myData._charAtd[attackNum].attackRange[i].x, -myData._charAtd[attackNum].attackRange[i].y, 0);
-                    attackAreas[i].transform.position = myPos + vec;
+                    attackAreas[i].transform.position = gameObject.transform.position + vec;
                     attackAreas[i].SetActive(true);
                 }
                 break;
@@ -168,7 +176,7 @@ public class PlayerBase : BattleBase
                 for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
                 {
                     vec.Set(myData._charAtd[attackNum].attackRange[i].y, -myData._charAtd[attackNum].attackRange[i].x, 0);
-                    attackAreas[i].transform.position = myPos + vec;
+                    attackAreas[i].transform.position = gameObject.transform.position + vec;
                     attackAreas[i].SetActive(true);
                 }
                 break;
@@ -176,7 +184,7 @@ public class PlayerBase : BattleBase
                 for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
                 {
                     vec.Set(myData._charAtd[attackNum].attackRange[i].x, myData._charAtd[attackNum].attackRange[i].y, 0);
-                    attackAreas[i].transform.position = myPos + vec;
+                    attackAreas[i].transform.position = gameObject.transform.position + vec;
                     attackAreas[i].SetActive(true);
                 }
                 break;
@@ -196,54 +204,52 @@ public class PlayerBase : BattleBase
     private void Attack()
     {
         if (!Input.GetMouseButtonDown(0)) return;
-        mousePos = BattleData.Instance.mainCam.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 10);
+        mousePos = GameManager.Instance.mainCam.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 10);
         mousePosInt = Vector3Int.RoundToInt(mousePos);
 
-        for (int i = 0; i < attackAreas.Length; i++)
+        if(myData._charAtd[attackNum].isSplash)
         {
-            if (!attackAreas[i].activeSelf)
+            for (int i = 0; i < attackAreas.Length; i++)
             {
-                Debug.Log($"{i}번에서 탈출!");
-                break;
-            }
-            if (CheckAttackOutLine(i))
-            {
-                if(BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x] != null)
+                if (!attackAreas[i].activeSelf) break;
+
+                if (attackAreas[i].transform.position == mousePosInt)
                 {
-                    if (attackAreas[i].transform.position == BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x].transform.position)
-                    {
-                        BattleData.Instance.mapOnChar[mousePosInt.y][mousePosInt.x].Hit(myData._charAtd[attackNum].damage);
-                        actionPoint -= myData._charAtd[attackNum].useAP;
-                        attackRangeMode = false;
-                        GoToMoveUI();
-                        break;
-                    }
+                    MapManager.Instance.SelectTile(mousePosInt)?.onTile.Hit(myData._charAtd[attackNum].damage, myData._charAtd[attackNum].damageType);
+                    GoToMoveUI();
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < attackAreas.Length; i++)
+            {
+                if (!attackAreas[i].activeSelf) break;
+
+                if (attackAreas[i].transform.position == mousePosInt)
+                {
+                    MapManager.Instance.SelectTile(mousePosInt)?.onTile.Hit(myData._charAtd[attackNum].damage, myData._charAtd[attackNum].damageType);
+                    GoToMoveUI();
                 }
             }
         }
     }
 
-    private bool CheckAttackOutLine(int i)
-    {
-        float x = attackAreas[i].transform.position.x;
-        float y = attackAreas[i].transform.position.y;
-        return true;
-        //return x >= 0 && x < BattleData.Instance.mapSize.x && y >= 0 && y < BattleData.Instance.mapSize.y;
-    }
-
     #endregion
 
-    public override void Hit(float damage)
+    public override void Hit(float damage, AttackCategory damageType)
     {
-        base.Hit(damage);
+        base.Hit(damage, damageType);
     }
+
     public void MyTurn()
     {
         actionPoint = maxActionPoint;
         maxActionPoint = 3;
     }
 
-    public void Move()
+    //버튼용
+    public void ToggleMove()
     {
         if (actionPoint <= 0) return;
         moveMode = !moveMode;

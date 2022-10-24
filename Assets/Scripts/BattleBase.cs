@@ -10,29 +10,34 @@ using UnityEngine;
 
 public class BattleBase : MonoBehaviour
 {
+    [HideInInspector]
     public BattleBase myBB;
-    public Vector3Int myPos;
+    public Vector3Int startPos;
 
     public bool isPlayerTeam;
-    public bool moveMode;
-    public bool attackUIMode;
-    public bool attackRangeMode;
 
     public int actionPoint;
     public int maxActionPoint;
 
+    public Tile onTile;
+
     public int hp;
     public float finalDamage;
+
+    public BattleBase[] target;
 
     public virtual void Start()
     {
         myBB = gameObject.GetComponent<BattleBase>();
-
-        gameObject.transform.position = myPos;
+        gameObject.transform.position = startPos;
+        onTile = MapManager.Instance.SelectTile(startPos);
+        onTile.OnTileChange(this);
+        actionPoint = maxActionPoint;
     }
 
-    public virtual void Hit(float damage) 
+    public virtual void Hit(float damage, AttackCategory damageType) 
     {
+        Debug.Log($"{damageType}으로 {damage}의 공격!");
         hp -= (int)damage;
 
         if (hp <= 0)
@@ -43,9 +48,16 @@ public class BattleBase : MonoBehaviour
 
         Debug.Log($"{gameObject.name}의 남은 HP : {hp}");
     }
+
+    public virtual void AfterMove()
+    {
+
+    }
+
     public virtual void Die() 
     {
         Debug.Log($"{gameObject.name}가 사망하였습니다.");
+        onTile.OnTileChange();
         Destroy(gameObject);
     }
 }

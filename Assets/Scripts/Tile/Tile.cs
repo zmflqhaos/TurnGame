@@ -4,15 +4,20 @@ using UnityEngine;
 
 public abstract class Tile : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public TileCategory tileCategory;
+    public BattleBase onTile = null;
+
+    public BattleBase CheckOnTile()
     {
-        
+        return onTile;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnTileChange(BattleBase battle)
     {
-        
+        onTile = battle;
+    }
+    public void OnTileChange()
+    {
+        onTile = null;
     }
 }

@@ -660,7 +660,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 926044967}
         m_TargetAssemblyTypeName: PlayerBase, Assembly-CSharp
-        m_MethodName: Move
+        m_MethodName: ToggleMove
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2150,19 +2150,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myBB: {fileID: 0}
-  myPos: {x: 0, y: 0, z: 0}
+  startPos: {x: 0, y: 0, z: 0}
   isPlayerTeam: 1
-  moveMode: 0
-  attackUIMode: 0
-  attackRangeMode: 0
   actionPoint: 0
   maxActionPoint: 3
+  onTile: {fileID: 0}
   hp: 0
   finalDamage: 0
+  target: []
   moveArea: {fileID: 1808657047}
   attackArea: {fileID: 1897683773}
   turnPanel: {fileID: 903694916}
   attackPanel: {fileID: 1064683095}
+  moveMode: 0
+  attackUIMode: 0
+  attackRangeMode: 0
 --- !u!1 &1064683095
 GameObject:
   m_ObjectHideFlags: 0
@@ -2406,6 +2408,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b15b4b8f53db60f4383bef9cbe730976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  vecOne:
+  - {x: 0, y: 1, z: 0}
+  - {x: -1, y: 0, z: 0}
+  - {x: 0, y: -1, z: 0}
+  - {x: 1, y: 0, z: 0}
   mapSo:
   - {fileID: 11400000, guid: a179d90d7b03cf64eab0e017ab3763b7, type: 2}
   tiles:
@@ -2500,6 +2507,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 8c0700f26ea770f4ebfa43ac5847e11a, type: 2}
       - {fileID: 11400000, guid: 6cc7ffa2d98165b41942e772e6a859d1, type: 2}
     _publicInv: []
+  mainCam: {fileID: 0}
 --- !u!114 &1309859754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2512,12 +2520,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4761083ce7ab0644abbca76013bbd593, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCam: {fileID: 0}
-  vecOne:
-  - {x: 0, y: 1, z: 0}
-  - {x: -1, y: 0, z: 0}
-  - {x: 0, y: -1, z: 0}
-  - {x: 1, y: 0, z: 0}
 --- !u!1 &1329774519
 GameObject:
   m_ObjectHideFlags: 0
@@ -4504,15 +4506,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myBB: {fileID: 0}
-  myPos: {x: 2, y: 2, z: 0}
+  startPos: {x: 2, y: 2, z: 0}
   isPlayerTeam: 0
-  moveMode: 0
-  attackUIMode: 0
-  attackRangeMode: 0
   actionPoint: 0
   maxActionPoint: 0
+  onTile: {fileID: 0}
   hp: 0
   finalDamage: 0
+  target: []
   myData: {fileID: 11400000, guid: 5170a7b33e2f0d54c80e07e5fde1c0be, type: 2}
 --- !u!1 &2077830644
 GameObject:

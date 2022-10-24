@@ -7,7 +7,7 @@ public class AttackSO : ScriptableObject
 {
     public List<Vector3Int> attackRange;//공격범위
     public float damage; //데미지
-    public AttackCate damageType; //공격의 데미지 종류
+    public AttackCategory damageType; //공격의 데미지 종류
 
     public int useAP; //사용하는 행동력
 

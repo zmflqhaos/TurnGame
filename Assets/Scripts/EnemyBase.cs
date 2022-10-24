@@ -12,8 +12,8 @@ public class EnemyBase : BattleBase
         hp = 100;
     }
 
-    public override void Hit(float damage)
+    public override void Hit(float damage, AttackCategory damageType)
     {
-        base.Hit(damage);
+        base.Hit(damage, damageType);
     }
 }

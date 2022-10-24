@@ -6,5 +6,5 @@ using UnityEngine;
 public class ItemSO : ScriptableObject
 {
 	public string _name;
-	public Category _category;
+	public ItemCategory _category;
 }
