@@ -17,5 +17,4 @@ MonoBehaviour:
   damage: 15
   damageType: 0
   useAP: 1
-  isSplash: 0
-  splashCount: 0
+  splashCount: 1

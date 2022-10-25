@@ -29,12 +29,14 @@ public class PlayerBase : BattleBase
     private Vector3 mousePos;
     private Vector3Int mousePosInt;
 
+    private int count;
 
     public override void Start()
     {
         base.Start();
         myData = GameManager.Instance.CurrentGameData._playersData[0];
         attackPos = LookRotation.D;
+        count = 0;
         for (int i = 0; i < 4; i++)
         {
             moveAreas[i] = Instantiate(moveArea, gameObject.transform);
@@ -50,28 +52,26 @@ public class PlayerBase : BattleBase
 
     void Update()
     {
-        Move();
+        InputMouse();
         AttackPosChange();
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            if (attackUIMode)
-                ToggleAttackUI();
-            if (attackRangeMode)
-            {
-                ClearAttackArea();
-                ToggleAttackArea();
-            }
-        }
-        if (attackArea.activeSelf)
-        {
-            Attack();
-        }
+        Tab();
+        Attack();
+    }
+
+    private void InputMouse()
+    {
+        if (!Input.GetMouseButtonDown(0)) return;
+        mousePos = GameManager.Instance.mainCam.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 10);
+        mousePosInt = Vector3Int.RoundToInt(mousePos);
+        if (attackArea.activeSelf) SelectTarget();
+        else Move();
     }
 
     #region 무브
     private void ToggleMoveArea()
     {
         moveArea.SetActive(moveMode);
+        turnPanel.SetActive(!moveMode);
         if (moveMode)
         {
             for (int i = 0; i < 4; i++)
@@ -86,9 +86,6 @@ public class PlayerBase : BattleBase
 
     private void Move()
     {
-        if (!Input.GetMouseButtonDown(0) || !moveMode) return;
-        mousePos = GameManager.Instance.mainCam.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 10);
-        mousePosInt = Vector3Int.RoundToInt(mousePos);
         for (int i = 0; i < 4; i++)
         {
             if (mousePosInt == onTile.transform.position + MapManager.Instance.vecOne[i] && CheckOutLine(i))
@@ -147,50 +144,52 @@ public class PlayerBase : BattleBase
     {
         attackNum = num;
         if (actionPoint < myData._charAtd[num].useAP) return;
-        if (myData._charAtd[num].isSplash) target = new BattleBase[myData._charAtd[num].splashCount];
+        target = new BattleBase[myData._charAtd[num].splashCount];
         AttackAreaRotation();
     }
 
     private void AttackAreaRotation()
     {
-        Vector3Int vec = new Vector3Int();
         switch (attackPos)
         {
             case LookRotation.W:
-                for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
-                {
-                    vec.Set(-myData._charAtd[attackNum].attackRange[i].y, myData._charAtd[attackNum].attackRange[i].x, 0);
-                    attackAreas[i].transform.position = gameObject.transform.position + vec;
-                    attackAreas[i].SetActive(true);
-                }
+                AreaSetting(1, -1, false);
                 break;
             case LookRotation.A:
-                for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
-                {
-                    vec.Set(-myData._charAtd[attackNum].attackRange[i].x, -myData._charAtd[attackNum].attackRange[i].y, 0);
-                    attackAreas[i].transform.position = gameObject.transform.position + vec;
-                    attackAreas[i].SetActive(true);
-                }
+                AreaSetting(-1, -1, true);
                 break;
             case LookRotation.S:
-                for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
-                {
-                    vec.Set(myData._charAtd[attackNum].attackRange[i].y, -myData._charAtd[attackNum].attackRange[i].x, 0);
-                    attackAreas[i].transform.position = gameObject.transform.position + vec;
-                    attackAreas[i].SetActive(true);
-                }
+                AreaSetting(-1, 1, false);
                 break;
             case LookRotation.D:
-                for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
-                {
-                    vec.Set(myData._charAtd[attackNum].attackRange[i].x, myData._charAtd[attackNum].attackRange[i].y, 0);
-                    attackAreas[i].transform.position = gameObject.transform.position + vec;
-                    attackAreas[i].SetActive(true);
-                }
+                AreaSetting(1, 1, true);
                 break;
         }
         attackArea.SetActive(true);
     }
+
+    private void AreaSetting(int x, int y, bool isXfirst)
+    {
+        Vector3Int vec = new Vector3Int();
+        for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
+        {
+            if(isXfirst)
+            vec.Set((myData._charAtd[attackNum].attackRange[i].x * x), (myData._charAtd[attackNum].attackRange[i].y * y), 0);
+            else
+            vec.Set((myData._charAtd[attackNum].attackRange[i].y * y), (myData._charAtd[attackNum].attackRange[i].x * x), 0);
+            attackAreas[i].transform.position = gameObject.transform.position + vec;
+            if()
+            attackAreas[i].SetActive(true);
+        }
+    }
+
+    /*private bool CheckOutLine(int i)
+    {
+        return onTile.transform.position.x + MapManager.Instance.vecOne[i].x >= 0
+            && onTile.transform.position.x + MapManager.Instance.vecOne[i].x <= MapManager.Instance.mapTiles.GetLength(1)
+            && onTile.transform.position.y + MapManager.Instance.vecOne[i].y >= 0
+            && onTile.transform.position.y + MapManager.Instance.vecOne[i].y <= MapManager.Instance.mapTiles.GetLength(0);
+    }*/
 
     private void ClearAttackArea()
     {
@@ -201,38 +200,53 @@ public class PlayerBase : BattleBase
         }
     }
 
+    private void SelectTarget()
+    {
+        for (int i = 0; i < attackAreas.Length; i++)
+        {
+            if (!attackAreas[i].activeSelf) break;
+
+            if (attackAreas[i].transform.position == mousePosInt)
+            {
+                CheckInTarget(MapManager.Instance.SelectTile(mousePosInt)?.onTile);
+            }
+        }
+    }
+
+    private bool CheckInTarget(BattleBase battle)
+    {
+        if (battle == null) return false;
+        for(int i=0; i<target.Length; i++)
+        {
+            if (target[i] == null) break;
+            if (target[i].gameObject == battle.gameObject)
+            {
+                for (int j = i + 1; j < target.Length; j++)
+                {
+                    target[j - 1] = target[j];
+                }
+                target[count] = null;
+                count--;
+                Debug.Log($"타겟 해제 : {battle.gameObject.name}, 남은 선택 수 {target.Length - count}");
+                return false;
+            }
+        }
+        if (count >= target.Length) return false;
+        target[count] = battle;
+        count++;
+        Debug.Log($"타게팅 : {battle.gameObject.name}, 남은 선택 수 {target.Length-count}");
+        return true;
+    }
+
     private void Attack()
     {
-        if (!Input.GetMouseButtonDown(0)) return;
-        mousePos = GameManager.Instance.mainCam.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 10);
-        mousePosInt = Vector3Int.RoundToInt(mousePos);
+        if (!Input.GetKeyDown(KeyCode.Return) || count <= 0) return;
 
-        if(myData._charAtd[attackNum].isSplash)
+        foreach (BattleBase a in target)
         {
-            for (int i = 0; i < attackAreas.Length; i++)
-            {
-                if (!attackAreas[i].activeSelf) break;
-
-                if (attackAreas[i].transform.position == mousePosInt)
-                {
-                    MapManager.Instance.SelectTile(mousePosInt)?.onTile.Hit(myData._charAtd[attackNum].damage, myData._charAtd[attackNum].damageType);
-                    GoToMoveUI();
-                }
-            }
+            a?.Hit(myData._charAtd[attackNum].damage, myData._charAtd[attackNum].damageType);
         }
-        else
-        {
-            for (int i = 0; i < attackAreas.Length; i++)
-            {
-                if (!attackAreas[i].activeSelf) break;
-
-                if (attackAreas[i].transform.position == mousePosInt)
-                {
-                    MapManager.Instance.SelectTile(mousePosInt)?.onTile.Hit(myData._charAtd[attackNum].damage, myData._charAtd[attackNum].damageType);
-                    GoToMoveUI();
-                }
-            }
-        }
+        GoToTurnUI();
     }
 
     #endregion
@@ -242,6 +256,7 @@ public class PlayerBase : BattleBase
         base.Hit(damage, damageType);
     }
 
+    //버튼용
     public void MyTurn()
     {
         actionPoint = maxActionPoint;
@@ -249,37 +264,61 @@ public class PlayerBase : BattleBase
     }
 
     //버튼용
-    public void ToggleMove()
+    public void ActiveMove()
     {
         if (actionPoint <= 0) return;
-        moveMode = !moveMode;
+        moveMode = true;
         ToggleMoveArea();
     }
 
-    public void ToggleAttackUI()
+    public void Tab()
     {
-        if (actionPoint <= 0) return;
-        attackUIMode = !attackUIMode;
-        moveMode = false;
-        attackRangeMode = false;
-        attackPanel.SetActive(attackUIMode);
-        turnPanel.SetActive(!attackUIMode);
-        ToggleMoveArea();
+        if (!Input.GetKeyDown(KeyCode.Tab)) return;
+
+        if (attackUIMode)
+        {
+            turnPanel.SetActive(true);
+            attackPanel.SetActive(false);
+            attackUIMode = false;
+        }
+        else if(attackRangeMode)
+        {
+            attackPanel.SetActive(true);
+            attackUIMode = true;
+            attackRangeMode = false;
+        }
+        else if(moveMode)
+        {
+            moveMode = false;
+            turnPanel.SetActive(true);
+            ToggleMoveArea();
+        }     
+        count = 0;
         ClearAttackArea();
     }
 
-    public void ToggleAttackArea()
+    //버튼용
+    public void ActiveAttackUI()
+    {
+        attackUIMode = true;
+        attackPanel.SetActive(true);
+        turnPanel.SetActive(false);
+    }
+
+    public void ActiveAttackArea()
     {
         if (actionPoint < myData._charAtd[attackNum].useAP) return;
-        attackUIMode = !attackUIMode;
-        attackRangeMode = !attackRangeMode;
-        moveMode = false;
-        attackPanel.SetActive(attackUIMode);
+        attackUIMode = false;
+        attackRangeMode = true;
+        count = 0;
+        attackPanel.SetActive(false);
+        turnPanel.SetActive(false);
     }
 
-    private void GoToMoveUI()
+    private void GoToTurnUI()
     {
         ClearAttackArea();
+        count = 0;
         attackUIMode = false;
         attackRangeMode = false;
         moveMode = false;

@@ -11,7 +11,6 @@ public class AttackSO : ScriptableObject
 
     public int useAP; //사용하는 행동력
 
-    public bool isSplash; //광역공격인가
     public int splashCount; //동시 공격 가능 개수
 
 }
