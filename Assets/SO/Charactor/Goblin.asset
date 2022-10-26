@@ -15,14 +15,13 @@ MonoBehaviour:
   data:
     _name: Goblin
     _charStat:
-      _vitStat: 3
-      _mtlStat: 3
-      _strStat: 3
-      _dexStat: 3
-      _intStat: 3
+      _vitStat: 2
+      _mtlStat: 2
+      _strStat: 2
+      _dexStat: 2
+      _intStat: 2
       _chaStat: 1
     _privateInv:
     - {fileID: 0}
     _charAtd:
     - {fileID: 11400000, guid: f525ef389040379418e22ebf08d3f510, type: 2}
-    - {fileID: 11400000, guid: 435bbf526d6854144aa7c7ebd940bfcd, type: 2}

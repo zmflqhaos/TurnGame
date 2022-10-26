@@ -12,6 +12,9 @@ public class BattleBase : MonoBehaviour
 {
     [HideInInspector]
     public BattleBase myBB;
+    [HideInInspector]
+    public CharactorData myData;
+
     public Vector3Int startPos;
 
     public bool isPlayerTeam;
@@ -22,7 +25,7 @@ public class BattleBase : MonoBehaviour
     public Tile onTile;
 
     public int hp;
-    public float finalDamage;
+    public int mental;
 
     public BattleBase[] target;
 
@@ -35,7 +38,22 @@ public class BattleBase : MonoBehaviour
         actionPoint = maxActionPoint;
     }
 
-    public virtual void Hit(float damage, AttackCategory damageType) 
+    public float SetFinalDamage(int num)
+    {
+        switch(myData.charAtd[num].damageType)
+        {
+            case AttackCategory.Physical:
+                return myData.charAtd[num].damage * myData.charStat.strStat;
+            case AttackCategory.Magic:
+                return myData.charAtd[num].damage * myData.charStat.intStat;
+            case AttackCategory.True:
+                return myData.charAtd[num].damage;
+        }
+        Debug.LogError("데미지타입을 설정해야합니다!");
+        return 0;
+    }
+
+    public virtual void Hit(float damage, AttackCategory damageType, AttackType attackType) 
     {
         Debug.Log($"{damageType}으로 {damage}의 공격!");
         hp -= (int)damage;
@@ -47,11 +65,6 @@ public class BattleBase : MonoBehaviour
         }
 
         Debug.Log($"{gameObject.name}의 남은 HP : {hp}");
-    }
-
-    public virtual void AfterMove()
-    {
-
     }
 
     public virtual void Die() 

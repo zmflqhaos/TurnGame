@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerBase : BattleBase
 {
-    private CharactorData myData;
 
     private GameObject[] moveAreas = new GameObject[4];
     [SerializeField]
@@ -14,17 +13,8 @@ public class PlayerBase : BattleBase
     [SerializeField]
     private GameObject attackArea;
 
-    [SerializeField]
-    private GameObject turnPanel;
-    [SerializeField]
-    private GameObject attackPanel;
-
     private LookRotation attackPos;
     private int attackNum;
-
-    public bool moveMode;
-    public bool attackUIMode;
-    public bool attackRangeMode;
 
     private Vector3 mousePos;
     private Vector3Int mousePosInt;
@@ -34,7 +24,9 @@ public class PlayerBase : BattleBase
     public override void Start()
     {
         base.Start();
-        myData = GameManager.Instance.CurrentGameData._playersData[0];
+        myData = GameManager.Instance.CurrentGameData.playersData[0];
+        hp = myData.hp;
+        mental = myData.mental;
         attackPos = LookRotation.D;
         count = 0;
         for (int i = 0; i < 4; i++)
@@ -54,7 +46,6 @@ public class PlayerBase : BattleBase
     {
         InputMouse();
         AttackPosChange();
-        Tab();
         Attack();
     }
 
@@ -64,60 +55,48 @@ public class PlayerBase : BattleBase
         mousePos = GameManager.Instance.mainCam.ScreenToWorldPoint(Input.mousePosition) + new Vector3(0, 0, 10);
         mousePosInt = Vector3Int.RoundToInt(mousePos);
         if (attackArea.activeSelf) SelectTarget();
-        else Move();
+        if (moveArea.activeSelf) Move();
     }
 
     #region 무브
-    private void ToggleMoveArea()
+    public void ToggleMoveArea()
     {
-        moveArea.SetActive(moveMode);
-        turnPanel.SetActive(!moveMode);
-        if (moveMode)
-        {
-            for (int i = 0; i < 4; i++)
-                moveAreas[i].SetActive(CheckOutLine(i));
-        }
-        else
-        {
-            for (int i = 0; i < 4; i++)
-                moveAreas[i].SetActive(false);
-        }
+        moveArea.SetActive(!moveArea);
+        for (int i = 0; i < 4; i++)
+            moveAreas[i].SetActive(CheckOutLine(moveAreas[i].transform.position));
     }
 
     private void Move()
     {
+        Vector3 movePosition;
+        Tile changeTile = null;
         for (int i = 0; i < 4; i++)
         {
-            if (mousePosInt == onTile.transform.position + MapManager.Instance.vecOne[i] && CheckOutLine(i))
+            movePosition = onTile.transform.position + MapManager.Instance.vecOne[i];
+            if (mousePosInt == movePosition && CheckOutLine(movePosition))
             {
+                changeTile = MapManager.Instance.SelectTile(onTile.transform.position + MapManager.Instance.vecOne[i]);
+                if (changeTile.onTile != null) break;
                 onTile.OnTileChange();
-                onTile = MapManager.Instance.SelectTile(onTile.transform.position + MapManager.Instance.vecOne[i]);
+                onTile = changeTile;
                 onTile.OnTileChange(this);
 
                 gameObject.transform.position = onTile.transform.position;
 
                 actionPoint--;
-                moveMode = false;
                 break;
             }
         }
         ToggleMoveArea();
-    } 
-
-    private bool CheckOutLine(int i)
-    {
-        return onTile.transform.position.x + MapManager.Instance.vecOne[i].x >= 0
-            && onTile.transform.position.x + MapManager.Instance.vecOne[i].x <= MapManager.Instance.mapTiles.GetLength(1)
-            && onTile.transform.position.y + MapManager.Instance.vecOne[i].y >= 0
-            && onTile.transform.position.y + MapManager.Instance.vecOne[i].y <= MapManager.Instance.mapTiles.GetLength(0);
     }
+
     #endregion
 
     #region 어택 UI
     private void AttackPosChange()
     {
-        if (actionPoint < myData._charAtd[attackNum].useAP) return;
-        if (!attackUIMode && attackRangeMode)
+        if (actionPoint < myData.charAtd[attackNum].useAP) return;
+        if (attackArea.activeSelf)
         {
             if (Input.GetKeyDown(KeyCode.W))
             {
@@ -143,8 +122,8 @@ public class PlayerBase : BattleBase
     public void ChangeAttackArea(int num)
     {
         attackNum = num;
-        if (actionPoint < myData._charAtd[num].useAP) return;
-        target = new BattleBase[myData._charAtd[num].splashCount];
+        if (actionPoint < myData.charAtd[num].useAP) return;
+        target = new BattleBase[myData.charAtd[num].splashCount];
         AttackAreaRotation();
     }
 
@@ -171,25 +150,16 @@ public class PlayerBase : BattleBase
     private void AreaSetting(int x, int y, bool isXfirst)
     {
         Vector3Int vec = new Vector3Int();
-        for (int i = 0; i < myData._charAtd[attackNum].attackRange.Count; i++)
+        for (int i = 0; i < myData.charAtd[attackNum].attackRange.Count; i++)
         {
             if(isXfirst)
-            vec.Set((myData._charAtd[attackNum].attackRange[i].x * x), (myData._charAtd[attackNum].attackRange[i].y * y), 0);
+            vec.Set((myData.charAtd[attackNum].attackRange[i].x * x), (myData.charAtd[attackNum].attackRange[i].y * y), 0);
             else
-            vec.Set((myData._charAtd[attackNum].attackRange[i].y * y), (myData._charAtd[attackNum].attackRange[i].x * x), 0);
+            vec.Set((myData.charAtd[attackNum].attackRange[i].y * y), (myData.charAtd[attackNum].attackRange[i].x * x), 0);
             attackAreas[i].transform.position = gameObject.transform.position + vec;
-            if()
-            attackAreas[i].SetActive(true);
+            attackAreas[i].SetActive(CheckOutLine(attackAreas[i].transform.position));
         }
     }
-
-    /*private bool CheckOutLine(int i)
-    {
-        return onTile.transform.position.x + MapManager.Instance.vecOne[i].x >= 0
-            && onTile.transform.position.x + MapManager.Instance.vecOne[i].x <= MapManager.Instance.mapTiles.GetLength(1)
-            && onTile.transform.position.y + MapManager.Instance.vecOne[i].y >= 0
-            && onTile.transform.position.y + MapManager.Instance.vecOne[i].y <= MapManager.Instance.mapTiles.GetLength(0);
-    }*/
 
     private void ClearAttackArea()
     {
@@ -204,9 +174,7 @@ public class PlayerBase : BattleBase
     {
         for (int i = 0; i < attackAreas.Length; i++)
         {
-            if (!attackAreas[i].activeSelf) break;
-
-            if (attackAreas[i].transform.position == mousePosInt)
+            if (attackAreas[i].activeSelf && attackAreas[i].transform.position == mousePosInt)
             {
                 CheckInTarget(MapManager.Instance.SelectTile(mousePosInt)?.onTile);
             }
@@ -244,16 +212,30 @@ public class PlayerBase : BattleBase
 
         foreach (BattleBase a in target)
         {
-            a?.Hit(myData._charAtd[attackNum].damage, myData._charAtd[attackNum].damageType);
+            a?.Hit(SetFinalDamage(attackNum), myData.charAtd[attackNum].damageType, myData.charAtd[attackNum].attackType);
         }
         GoToTurnUI();
     }
 
     #endregion
 
-    public override void Hit(float damage, AttackCategory damageType)
+    private bool CheckOutLine(Vector3 position)
     {
-        base.Hit(damage, damageType);
+        return position.x >= 0
+            && position.x <= MapManager.Instance.mapTiles.GetLength(1)
+            && position.y >= 0
+            && position.y <= MapManager.Instance.mapTiles.GetLength(0);
+    }
+
+    public override void Hit(float damage, AttackCategory damageType, AttackType attackType)
+    {
+        base.Hit(damage, damageType, attackType);
+    }
+
+    private void GoToTurnUI()
+    {
+        ClearAttackArea();
+        count = 0;
     }
 
     //버튼용
@@ -261,68 +243,5 @@ public class PlayerBase : BattleBase
     {
         actionPoint = maxActionPoint;
         maxActionPoint = 3;
-    }
-
-    //버튼용
-    public void ActiveMove()
-    {
-        if (actionPoint <= 0) return;
-        moveMode = true;
-        ToggleMoveArea();
-    }
-
-    public void Tab()
-    {
-        if (!Input.GetKeyDown(KeyCode.Tab)) return;
-
-        if (attackUIMode)
-        {
-            turnPanel.SetActive(true);
-            attackPanel.SetActive(false);
-            attackUIMode = false;
-        }
-        else if(attackRangeMode)
-        {
-            attackPanel.SetActive(true);
-            attackUIMode = true;
-            attackRangeMode = false;
-        }
-        else if(moveMode)
-        {
-            moveMode = false;
-            turnPanel.SetActive(true);
-            ToggleMoveArea();
-        }     
-        count = 0;
-        ClearAttackArea();
-    }
-
-    //버튼용
-    public void ActiveAttackUI()
-    {
-        attackUIMode = true;
-        attackPanel.SetActive(true);
-        turnPanel.SetActive(false);
-    }
-
-    public void ActiveAttackArea()
-    {
-        if (actionPoint < myData._charAtd[attackNum].useAP) return;
-        attackUIMode = false;
-        attackRangeMode = true;
-        count = 0;
-        attackPanel.SetActive(false);
-        turnPanel.SetActive(false);
-    }
-
-    private void GoToTurnUI()
-    {
-        ClearAttackArea();
-        count = 0;
-        attackUIMode = false;
-        attackRangeMode = false;
-        moveMode = false;
-        attackPanel.SetActive(false);
-        turnPanel.SetActive(true);
     }
 }

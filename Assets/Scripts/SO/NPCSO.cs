@@ -6,5 +6,4 @@ using UnityEngine;
 public class NPCSO : ScriptableObject
 {
     public CharactorData data;
-
 }

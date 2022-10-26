@@ -49,5 +49,9 @@ public class SaveLoadController : MonoBehaviour
 	}
     void Update()
 	{
+		if(Input.GetKeyDown(KeyCode.S))
+        {
+			SaveSystem.Save("GameDataSave");
+        }
 	}
 }

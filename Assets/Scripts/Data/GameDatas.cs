@@ -7,18 +7,20 @@ using UnityEngine;
 [Serializable]
 public class GameData
 {
-	public List<CharactorData> _playersData;
-	public List<ItemSO> _publicInv;
+	public List<CharactorData> playersData;
+	public List<ItemSO> publicInv;
 }
 
 //캐릭터 하나를 관리하는 데이터
 [Serializable]
 public class CharactorData
 {
-	public string _name;
-	public Stat _charStat;
-	public List<ItemSO> _privateInv;
-    public List<AttackSO> _charAtd;
+	public string name;
+    public int hp;
+    public int mental;
+	public Stat charStat;
+	public List<ItemSO> privateInv;
+    public List<AttackSO> charAtd;
 }
 
 //스텟을 보관하는 클래스
@@ -32,32 +34,32 @@ public class Stat
     /// <summary>
     /// 체력
     /// </summary>
-    public int _vitStat;
+    public int vitStat;
 
     /// <summary>
     /// 정신력
     /// </summary>
-    public int _mtlStat;
+    public int mtlStat;
 
     /// <summary>
     /// 힘
     /// </summary>
-    public int _strStat;
+    public int strStat;
 
     /// <summary>
     /// 민첩
     /// </summary>
-    public int _dexStat;
+    public int dexStat;
 
     /// <summary>
     /// 지능
     /// </summary>
-    public int _intStat;
+    public int intStat;
 
     /// <summary>
     /// 매력
     /// </summary>
-    public int _chaStat;
+    public int chaStat;
 }
 
 //아이템의 종류를 구분하는 이넘
@@ -76,6 +78,13 @@ public enum AttackCategory
     Physical,
     Magic,
     True,
+}
+
+//공격 방법을 결정함
+public enum AttackType
+{
+    Melee, 
+    Ranged
 }
 
 //바라보는 방향

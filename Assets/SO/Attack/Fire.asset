@@ -16,8 +16,8 @@ MonoBehaviour:
   - {x: 1, y: 0, z: 0}
   - {x: 2, y: 0, z: 0}
   - {x: 3, y: 0, z: 0}
-  damage: 20
+  damage: 0.5
   damageType: 1
+  attackType: 1
   useAP: 2
-  isSplash: 1
   splashCount: 2
