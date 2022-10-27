@@ -27,12 +27,17 @@ public class BattleBase : MonoBehaviour
     public int hp;
     public int mental;
 
+    public List<AttackSO> attacks;
     public BattleBase[] target;
 
     public virtual void Start()
     {
         myBB = gameObject.GetComponent<BattleBase>();
         gameObject.transform.position = startPos;
+        for (int i = 0; i < myData.charAtd.Count; i++)
+        {
+            attacks.Add(GameManager.Instance.attackSOList[myData.charAtd[i]]);
+        }
         onTile = MapManager.Instance.SelectTile(startPos);
         onTile.OnTileChange(this);
         actionPoint = maxActionPoint;
@@ -40,17 +45,22 @@ public class BattleBase : MonoBehaviour
 
     public float SetFinalDamage(int num)
     {
-        switch(myData.charAtd[num].damageType)
+        float finalDamage = 0;
+        switch(attacks[num].damageType)
         {
             case AttackCategory.Physical:
-                return myData.charAtd[num].damage * myData.charStat.strStat;
+                finalDamage = attacks[num].damage * myData.charStat.strStat;
+                break;
             case AttackCategory.Magic:
-                return myData.charAtd[num].damage * myData.charStat.intStat;
+                finalDamage = attacks[num].damage * myData.charStat.intStat;
+                break;
             case AttackCategory.True:
-                return myData.charAtd[num].damage;
+                finalDamage = attacks[num].damage;
+                break;
         }
-        Debug.LogError("데미지타입을 설정해야합니다!");
-        return 0;
+        finalDamage = Mathf.Round(finalDamage);
+        if (finalDamage < 1) finalDamage = 1;
+        return finalDamage;
     }
 
     public virtual void Hit(float damage, AttackCategory damageType, AttackType attackType) 

@@ -9,8 +9,8 @@ public class EnemyBase : BattleBase
 
     public override void Start()
     {
-        base.Start();
         myData = npcSo.data;
+        base.Start();
         hp = myData.charStat.vitStat * 2;
         mental = myData.charStat.mtlStat;
     }

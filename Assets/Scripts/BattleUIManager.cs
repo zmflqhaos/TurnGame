@@ -24,10 +24,7 @@ public class BattleUIManager : MonoSingleton<BattleUIManager>
         {
             turnPanel.SetActive(true);
             attackPanel.SetActive(false);
-        }
-        else if (!attackPanel.activeSelf && !turnPanel.activeSelf)
-        {
-            attackPanel.SetActive(true);
+            player.ClearAttackArea();
         }
     }
 
@@ -43,12 +40,4 @@ public class BattleUIManager : MonoSingleton<BattleUIManager>
     {
         player.ToggleMoveArea();
     }
-
-    //¹öÆ°¿ë
-    public void ActiveAttackArea()
-    {
-        attackPanel.SetActive(false);
-        turnPanel.SetActive(false);
-    }
-
 }

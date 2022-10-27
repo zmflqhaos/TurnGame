@@ -19,8 +19,8 @@ public class CharactorData
     public int hp;
     public int mental;
 	public Stat charStat;
-	public List<ItemSO> privateInv;
-    public List<AttackSO> charAtd;
+	public List<int> privateInv;
+    public List<int> charAtd;
 }
 
 //스텟을 보관하는 클래스

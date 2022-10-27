@@ -23,8 +23,8 @@ public class PlayerBase : BattleBase
 
     public override void Start()
     {
-        base.Start();
         myData = GameManager.Instance.CurrentGameData.playersData[0];
+        base.Start();
         hp = myData.hp;
         mental = myData.mental;
         attackPos = LookRotation.D;
@@ -61,9 +61,10 @@ public class PlayerBase : BattleBase
     #region 무브
     public void ToggleMoveArea()
     {
-        moveArea.SetActive(!moveArea);
+        if (actionPoint <= 0) return;
+        moveArea.SetActive(!moveArea.activeSelf);
         for (int i = 0; i < 4; i++)
-            moveAreas[i].SetActive(CheckOutLine(moveAreas[i].transform.position));
+            moveAreas[i].SetActive(CheckOutLine(moveAreas[i].transform.position) && moveArea.activeSelf);
     }
 
     private void Move()
@@ -82,12 +83,11 @@ public class PlayerBase : BattleBase
                 onTile.OnTileChange(this);
 
                 gameObject.transform.position = onTile.transform.position;
-
+                ToggleMoveArea();
                 actionPoint--;
                 break;
             }
         }
-        ToggleMoveArea();
     }
 
     #endregion
@@ -95,7 +95,7 @@ public class PlayerBase : BattleBase
     #region 어택 UI
     private void AttackPosChange()
     {
-        if (actionPoint < myData.charAtd[attackNum].useAP) return;
+        if (actionPoint < attacks[attackNum].useAP) return;
         if (attackArea.activeSelf)
         {
             if (Input.GetKeyDown(KeyCode.W))
@@ -122,8 +122,9 @@ public class PlayerBase : BattleBase
     public void ChangeAttackArea(int num)
     {
         attackNum = num;
-        if (actionPoint < myData.charAtd[num].useAP) return;
-        target = new BattleBase[myData.charAtd[num].splashCount];
+        if (actionPoint < attacks[num].useAP) return;
+        target = new BattleBase[attacks[num].splashCount];
+        if (moveArea.activeSelf) ToggleMoveArea();
         AttackAreaRotation();
     }
 
@@ -150,18 +151,18 @@ public class PlayerBase : BattleBase
     private void AreaSetting(int x, int y, bool isXfirst)
     {
         Vector3Int vec = new Vector3Int();
-        for (int i = 0; i < myData.charAtd[attackNum].attackRange.Count; i++)
+        for (int i = 0; i < attacks[attackNum].attackRange.Count; i++)
         {
             if(isXfirst)
-            vec.Set((myData.charAtd[attackNum].attackRange[i].x * x), (myData.charAtd[attackNum].attackRange[i].y * y), 0);
+            vec.Set((attacks[attackNum].attackRange[i].x * x), (attacks[attackNum].attackRange[i].y * y), 0);
             else
-            vec.Set((myData.charAtd[attackNum].attackRange[i].y * y), (myData.charAtd[attackNum].attackRange[i].x * x), 0);
+            vec.Set((attacks[attackNum].attackRange[i].y * y), (attacks[attackNum].attackRange[i].x * x), 0);
             attackAreas[i].transform.position = gameObject.transform.position + vec;
             attackAreas[i].SetActive(CheckOutLine(attackAreas[i].transform.position));
         }
     }
 
-    private void ClearAttackArea()
+    public void ClearAttackArea()
     {
         attackArea.SetActive(false);
         for (int i = 0; i < 10; i++)
@@ -212,8 +213,9 @@ public class PlayerBase : BattleBase
 
         foreach (BattleBase a in target)
         {
-            a?.Hit(SetFinalDamage(attackNum), myData.charAtd[attackNum].damageType, myData.charAtd[attackNum].attackType);
+            a?.Hit(SetFinalDamage(attackNum), attacks[attackNum].damageType, attacks[attackNum].attackType);
         }
+        actionPoint -= attacks[attackNum].useAP;
         GoToTurnUI();
     }
 
@@ -222,9 +224,9 @@ public class PlayerBase : BattleBase
     private bool CheckOutLine(Vector3 position)
     {
         return position.x >= 0
-            && position.x <= MapManager.Instance.mapTiles.GetLength(1)
+            && position.x <= MapManager.Instance.mapTiles.GetLength(1)-1
             && position.y >= 0
-            && position.y <= MapManager.Instance.mapTiles.GetLength(0);
+            && position.y <= MapManager.Instance.mapTiles.GetLength(0)-1;
     }
 
     public override void Hit(float damage, AttackCategory damageType, AttackType attackType)

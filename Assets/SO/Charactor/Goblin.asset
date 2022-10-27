@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: Goblin
   m_EditorClassIdentifier: 
   data:
-    _name: Goblin
-    _charStat:
-      _vitStat: 2
-      _mtlStat: 2
-      _strStat: 2
-      _dexStat: 2
-      _intStat: 2
-      _chaStat: 1
-    _privateInv:
-    - {fileID: 0}
-    _charAtd:
-    - {fileID: 11400000, guid: f525ef389040379418e22ebf08d3f510, type: 2}
+    name: Goblin
+    hp: 0
+    mental: 0
+    charStat:
+      vitStat: 3
+      mtlStat: 2
+      strStat: 2
+      dexStat: 4
+      intStat: 2
+      chaStat: 0
+    privateInv: 
+    charAtd: 

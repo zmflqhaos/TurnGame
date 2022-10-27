@@ -9,6 +9,9 @@ public class GameManager : MonoSingleton<GameManager>
 
     public GameData CurrentGameData { get { return gameData; } set { gameData = value; } }
 
+    public List<AttackSO> attackSOList;
+    public List<ItemSO> itemSOList;
+
     public Camera mainCam;
 
     private void Awake()

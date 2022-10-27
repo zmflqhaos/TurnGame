@@ -338,7 +338,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &274955186
 GameObject:
@@ -902,7 +902,7 @@ GameObject:
   - component: {fileID: 432451940}
   - component: {fileID: 432451939}
   m_Layer: 0
-  m_Name: Enemy (1)
+  m_Name: Goblin2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -932,15 +932,16 @@ MonoBehaviour:
       dexStat: 0
       intStat: 0
       chaStat: 0
-    privateInv: []
-    charAtd: []
-  startPos: {x: 3, y: 2, z: 0}
+    privateInv: 
+    charAtd: 
+  startPos: {x: 7, y: 1, z: 0}
   isPlayerTeam: 0
   actionPoint: 0
-  maxActionPoint: 0
+  maxActionPoint: 3
   onTile: {fileID: 0}
   hp: 0
   mental: 0
+  attacks: []
   target: []
   npcSo: {fileID: 11400000, guid: 5170a7b33e2f0d54c80e07e5fde1c0be, type: 2}
 --- !u!212 &432451940
@@ -985,7 +986,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0.64705884, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1008,7 +1009,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &442794855
 GameObject:
@@ -1401,18 +1402,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 154729967}
-        m_TargetAssemblyTypeName: BattleUIManager, Assembly-CSharp
-        m_MethodName: ActiveAttackArea
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &587371410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1539,18 +1528,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: PlayerBase, Assembly-CSharp
         m_MethodName: ChangeAttackArea
         m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 154729967}
-        m_TargetAssemblyTypeName: BattleUIManager, Assembly-CSharp
-        m_MethodName: ActiveAttackArea
-        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2167,18 +2144,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 154729967}
-        m_TargetAssemblyTypeName: BattleUIManager, Assembly-CSharp
-        m_MethodName: ActiveAttackArea
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &921569604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2328,15 +2293,16 @@ MonoBehaviour:
       dexStat: 0
       intStat: 0
       chaStat: 0
-    privateInv: []
-    charAtd: []
-  startPos: {x: 0, y: 0, z: 0}
+    privateInv: 
+    charAtd: 
+  startPos: {x: 0, y: 2, z: 0}
   isPlayerTeam: 1
   actionPoint: 0
   maxActionPoint: 3
   onTile: {fileID: 0}
   hp: 0
   mental: 0
+  attacks: []
   target: []
   moveArea: {fileID: 1808657047}
   attackArea: {fileID: 1897683773}
@@ -2606,7 +2572,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1309859750
 GameObject:
@@ -2668,8 +2634,8 @@ MonoBehaviour:
   gameData:
     playersData:
     - name: zmflqh
-      hp: 0
-      mental: 0
+      hp: 10
+      mental: 5
       charStat:
         vitStat: 5
         mtlStat: 5
@@ -2677,12 +2643,14 @@ MonoBehaviour:
         dexStat: 5
         intStat: 5
         chaStat: 5
-      privateInv: []
-      charAtd:
-      - {fileID: 11400000, guid: f525ef389040379418e22ebf08d3f510, type: 2}
-      - {fileID: 11400000, guid: 8c0700f26ea770f4ebfa43ac5847e11a, type: 2}
-      - {fileID: 11400000, guid: 6cc7ffa2d98165b41942e772e6a859d1, type: 2}
+      privateInv: 
+      charAtd: 000000000100000002000000
     publicInv: []
+  attackSOList:
+  - {fileID: 11400000, guid: f525ef389040379418e22ebf08d3f510, type: 2}
+  - {fileID: 11400000, guid: 8c0700f26ea770f4ebfa43ac5847e11a, type: 2}
+  - {fileID: 11400000, guid: 6cc7ffa2d98165b41942e772e6a859d1, type: 2}
+  itemSOList: []
   mainCam: {fileID: 0}
 --- !u!1 &1329774519
 GameObject:
@@ -4584,7 +4552,7 @@ GameObject:
   - component: {fileID: 2075094887}
   - component: {fileID: 2075094889}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Goblin1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4632,7 +4600,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0.64705884, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -4681,15 +4649,16 @@ MonoBehaviour:
       dexStat: 0
       intStat: 0
       chaStat: 0
-    privateInv: []
-    charAtd: []
-  startPos: {x: 2, y: 2, z: 0}
+    privateInv: 
+    charAtd: 
+  startPos: {x: 7, y: 3, z: 0}
   isPlayerTeam: 0
   actionPoint: 0
-  maxActionPoint: 0
+  maxActionPoint: 3
   onTile: {fileID: 0}
   hp: 0
   mental: 0
+  attacks: []
   target: []
   npcSo: {fileID: 11400000, guid: 5170a7b33e2f0d54c80e07e5fde1c0be, type: 2}
 --- !u!1 &2077830644

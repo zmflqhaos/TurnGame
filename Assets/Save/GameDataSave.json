@@ -1,1 +1,1 @@
-{"playersData":[{"name":"zmflqh","hp":0,"mental":0,"charStat":{"vitStat":5,"mtlStat":5,"strStat":5,"dexStat":5,"intStat":5,"chaStat":5},"privateInv":[],"charAtd":[{"instanceID":24890},{"instanceID":24892},{"instanceID":24894}]}],"publicInv":[]}
+{"playersData":[{"name":"zmflqh","hp":10,"mental":5,"charStat":{"vitStat":5,"mtlStat":5,"strStat":5,"dexStat":5,"intStat":5,"chaStat":5},"privateInv":[],"charAtd":[0,1,2]}],"publicInv":[]}
